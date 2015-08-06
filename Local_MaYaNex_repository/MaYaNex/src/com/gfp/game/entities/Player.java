@@ -119,10 +119,7 @@ public class Player extends Mob
 		{
 			// health--;
 		}
-		if( isBerry )
-		{
-			health ++;
-		}
+		
 
 		tickCount++;
 
@@ -273,6 +270,10 @@ public class Player extends Mob
 			screen.render( xOffset + modifier - (modifier * flipBottom),
 					yOffset + modifier, (xTile + 1) + (yTile + 1) * 32, colour,
 					flipBottom, scale ); // lower body part 2
+		}
+		
+		if(isBerry && health != initHealth && !isLava && !isSwimming){
+			health++;
 		}
 
 		if( username != null )
