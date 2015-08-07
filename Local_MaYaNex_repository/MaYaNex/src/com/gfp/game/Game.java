@@ -11,6 +11,7 @@ import java.awt.image.DataBufferInt;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import com.gfp.game.entities.Bullet;
 import com.gfp.game.entities.Player;
 import com.gfp.game.gfx.Colours;
 import com.gfp.game.gfx.Screen;
@@ -19,6 +20,7 @@ import com.gfp.game.level.Level;
 import com.gfp.game.level.Tiles.Tile;
 import com.gfp.game.net.GameClient;
 import com.gfp.game.net.GameServer;
+import com.gfp.game.net.packets.Packet00Login;
 
 public class Game extends Canvas implements Runnable
 {
@@ -26,7 +28,7 @@ public class Game extends Canvas implements Runnable
 
 	private static final long serialVersionUID = 1L;
 
-	public static final int WIDTH = 300;
+	public static final int WIDTH = 160;//300
 	public static final int HEIGHT = WIDTH / 12 * 9;
 	public static final int SCALE = 3;
 	public static final String NAME = "MaYiNeX";
@@ -46,6 +48,7 @@ public class Game extends Canvas implements Runnable
 	public InputHandler input;
 	public static Level level;
 	public Player player;
+	public Bullet bullet;
 	
 	
 	private GameClient socketClient;
@@ -91,8 +94,13 @@ public class Game extends Canvas implements Runnable
 		screen = new Screen(WIDTH, HEIGHT, new SpriteSheet("/SpriteSheet.png"));
 		input = new InputHandler(this);
 		level = new Level("/levels/Level.png");
-		 player = new Player(level, 0, 0, input, JOptionPane.showInputDialog(this, "Please enter a username"), 1);
-         level.addEntity(player);
+		Packet00Login loginPacket = new Packet00Login(JOptionPane.showInputDialog(this, "Please enter a username"));
+		loginPacket.writeData(socketClient);
+		
+		/*player = new Player(level, 0, 0, input, JOptionPane.showInputDialog(this, "Please enter a username"), 1);
+        level.addEntity(player);*/
+        
+        
 		
 		/*player = new PlayerMP(level, 100, 100, input, JOptionPane.showInputDialog(this, "Please enter a username"),1,
                 null, -1);
@@ -103,7 +111,7 @@ public class Game extends Canvas implements Runnable
         }
         loginPacket.writeData(socketClient);*/
 						
-		socketClient.sendData( "ping".getBytes() );
+		/*socketClient.sendData( "ping".getBytes() );*/
 
 	}
 
@@ -163,6 +171,7 @@ public class Game extends Canvas implements Runnable
 				tick();
 				Delta -= 1;
 				ShouldRender = true;
+				
 
 			}
 
@@ -186,6 +195,8 @@ public class Game extends Canvas implements Runnable
 
 				LastTimer += 1000;
 			/*	System.out.println(Ticks + " Ticks, " + Frames + " Frames");*/
+				frame.setName("hello"+Integer.toString(Ticks));
+				frame.pack();
 				Frames = 0;
 				Ticks = 0;
 
@@ -209,6 +220,7 @@ public class Game extends Canvas implements Runnable
 			t.tick();
 			
 		}
+		
 		
 	}
 
