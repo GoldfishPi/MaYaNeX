@@ -10,7 +10,7 @@ public class Player extends Mob
 {
 
 	private InputHandler input;
-	private int colour = Colours.get( -1, 000, 500, 543 );
+	private int colour = Colours.get(-1, 000, 500, 543);
 	private int scale = 1;
 	public boolean gm = true;
 	protected boolean isSwimming = false;
@@ -22,10 +22,11 @@ public class Player extends Mob
 	public int timeInLava = 0;
 	protected boolean isBerry = false;
 
-	public Player( Level level, int x, int y, InputHandler input,
-			String username, int health )
+	public Bullet bullet;
+
+	public Player(Level level, int x, int y, InputHandler input, String username)
 	{
-		super( level, "Player", x, y, 1 );
+		super(level, "Player", x, y, 1);
 		this.input = input;
 		this.username = username;
 		// this.health = health;
@@ -36,96 +37,96 @@ public class Player extends Mob
 
 		int xa = 0;
 		int ya = 0;
+		if (input != null)
+		{
+			if (input.Up.isPressed())
+			{
+				ya -= 1;
+			}
+			if (input.Down.isPressed())
+			{
+				ya += 1;
+			}
+			if (input.Left.isPressed())
+			{
+				xa -= 1;
+			}
+			if (input.Right.isPressed())
+			{
+				xa += 1;
 
-		if( input.Up.isPressed() )
-		{
-			ya -= 1;
+			}
 		}
-		if( input.Down.isPressed() )
+		/*if (input.J.isPressed())
 		{
-			ya += 1;
-		}
-		if( input.Left.isPressed() )
-		{
-			xa -= 1;
-		}
-		if( input.Right.isPressed() )
-		{
-			xa += 1;
-
+			bullet = new Bullet(level, "bullet", 5, 5, 1);
+			level.addEntity(bullet);
 		}
 
-		if( input.J.isPressed() )
+		if (input.One.isPressed())
 		{
-
-		}
-
-		if( input.One.isPressed() )
-		{
-			if( gm == false )
+			if (gm == false)
 			{
 				gm = true;
 				isSwimming = true;
-			} else if( gm == true )
+			} else if (gm == true)
 			{
 				gm = false;
 				isSwimming = false;
 			}
-		}
+		}*/
 
-		if( xa != 0 || ya != 0 )
+		if (xa != 0 || ya != 0)
 		{
-			move( xa, ya );
+			move(xa, ya);
 			isMoving = true;
 		} else
 		{
 			isMoving = false;
 		}
 
-		if( level.getTile( this.x >> 3, this.y >> 3 ).getid() == 3 )
+		if (level.getTile(this.x >> 3, this.y >> 3).getid() == 3)
 		{
 			isSwimming = true;
 		}
-		if( isSwimming
-				&& level.getTile( this.x >> 3, this.y >> 3 ).getid() != 3 )
+		if (isSwimming && level.getTile(this.x >> 3, this.y >> 3).getid() != 3)
 		{
 			isSwimming = false;
 		}
 
-		if( level.getTile( this.x >> 3, this.y >> 3 ).getid() == 8 )
+		if (level.getTile(this.x >> 3, this.y >> 3).getid() == 8)
 		{
 			isLava = true;
 		}
-		if( isLava && level.getTile( this.x >> 3, this.y >> 3 ).getid() != 8 )
+		if (isLava && level.getTile(this.x >> 3, this.y >> 3).getid() != 8)
 		{
 			isLava = false;
 		}
-		if( level.getTile( this.x >> 3, this.y >> 3 ).getid() == 5 )
+		if (level.getTile(this.x >> 3, this.y >> 3).getid() == 5)
 		{
 			isBerry = true;
 		}
 
-		if( isBerry && level.getTile( this.x >> 3, this.y >> 3 ).getid() != 5 )
+		if (isBerry && level.getTile(this.x >> 3, this.y >> 3).getid() != 5)
 		{
 			isBerry = false;
 		}
 
-		if( hasPainfull( xa, ya ) )
+		if (hasPainfull(xa, ya))
 		{
 			health--;
 		}
 
-		if( isLava )
+		if (isLava)
 		{
 			// health--;
 		}
-		
 
 		tickCount++;
 
 	}
 
-	public void render( Screen screen )
+	public void render(Screen screen)
 	{
 		int xTile = 0;
 		int yTile = charic;
@@ -142,12 +143,12 @@ public class Player extends Mob
 		int xOutline = xHealthHud;
 		int yOutline = yHealthHud;
 
-		if( movingDir == 1 )
+		if (movingDir == 1)
 		{
 			xTile += 2;
-		} else if( movingDir > 1 )
+		} else if (movingDir > 1)
 		{
-			if( isMoving == true )
+			if (isMoving == true)
 			{
 				xTile += 4 + ((numSteps >> walkingSpeed) & 1) * 2;
 				flipTop = (movingDir - 1) % 2;
@@ -162,129 +163,118 @@ public class Player extends Mob
 		int xOffset = x - modifier / 2;
 		int yOffset = y - modifier / 2 - 4;
 		// Swimming code
-		if( isSwimming )
+		if (isSwimming)
 		{
 			int waterColour = 0;
 			yOffset += 6;
-			if( tickCount % 60 < 15 )
+			if (tickCount % 60 < 15)
 			{
 				yOffset -= 1;
-				waterColour = Colours.get( -1, -1, 225, -1 );
-			} else if( 15 <= tickCount % 60 && tickCount % 60 < 30 )
+				waterColour = Colours.get(-1, -1, 225, -1);
+			} else if (15 <= tickCount % 60 && tickCount % 60 < 30)
 			{
-				waterColour = Colours.get( -1, 225, 115, -1 );
-			} else if( 30 <= tickCount % 60 && tickCount % 60 < 45 )
+				waterColour = Colours.get(-1, 225, 115, -1);
+			} else if (30 <= tickCount % 60 && tickCount % 60 < 45)
 			{
-				waterColour = Colours.get( -1, 115, -1, 225 );
+				waterColour = Colours.get(-1, 115, -1, 225);
 			} else
 			{
-				waterColour = Colours.get( -1, 225, 115, -1 );
+				waterColour = Colours.get(-1, 225, 115, -1);
 			}
 			// swiming pudle
 
-			screen.render( xOffset, yOffset + 3, 0 + 27 * 32, waterColour,
-					0x00, 1 );
-			screen.render( xOffset + 8, yOffset + 3, 0 + 27 * 32, waterColour,
-					0x01, 1 );
+			screen.render(xOffset, yOffset + 3, 0 + 27 * 32, waterColour, 0x00, 1);
+			screen.render(xOffset + 8, yOffset + 3, 0 + 27 * 32, waterColour, 0x01, 1);
 		}
 
-		if( isLava )
+		if (isLava)
 		{
 			int lavaColour = 0;
 			yOffset += 5;
 
-			if( tickCount % 60 < 15 )
+			if (tickCount % 60 < 15)
 			{
 				yOffset -= 1;
-				lavaColour = Colours.get( -1, -1, 500, -1 );
-			} else if( 15 <= tickCount % 60 && tickCount % 60 < 30 )
+				lavaColour = Colours.get(-1, -1, 500, -1);
+			} else if (15 <= tickCount % 60 && tickCount % 60 < 30)
 			{
-				lavaColour = Colours.get( -1, 500, 300, -1 );
-			} else if( 30 <= tickCount % 60 && tickCount % 60 < 45 )
+				lavaColour = Colours.get(-1, 500, 300, -1);
+			} else if (30 <= tickCount % 60 && tickCount % 60 < 45)
 			{
-				lavaColour = Colours.get( -1, 300, -1, 500 );
+				lavaColour = Colours.get(-1, 300, -1, 500);
 				yOffset += 1;
 			} else
 			{
-				lavaColour = Colours.get( -1, 500, 300, -1 );
+				lavaColour = Colours.get(-1, 500, 300, -1);
 				timeInLava += 1;
 			}
 
-			if( timeInLava >= 50 )
+			if (timeInLava >= 50)
 			{
 				health--;
 				timeInLava = 0;
 			}
 
-			screen.render( xOffset, yOffset + 3, 0 + 27 * 32, lavaColour, 0x00,
-					1 );
-			screen.render( xOffset + 8, yOffset + 3, 0 + 27 * 32, lavaColour,
-					0x01, 1 );
+			screen.render(xOffset, yOffset + 3, 0 + 27 * 32, lavaColour, 0x00, 1);
+			screen.render(xOffset + 8, yOffset + 3, 0 + 27 * 32, lavaColour, 0x01, 1);
 		}
 
-		else if( !isLava )
+		else if (!isLava)
 		{
 			timeInLava = 0;
 		}
 
 		// health
-		for( int i = 0;i < health;i++ )
+		for (int i = 0; i < health; i++)
 		{
-			screen.render( screen.xOffset + xHealth, screen.yOffset + yHealth,
-					1 + 27 * 32, Colours.get( -1, 500, 500, 000 ), 0x00, 1 );
-			screen.render( screen.xOffset + xHealth - 7, screen.yOffset
-					+ yHealth, 1 + 27 * 32, Colours.get( -1, 500, 500, 000 ),
-					0x01, 1 );
+			screen.render(screen.xOffset + xHealth, screen.yOffset + yHealth, 1 + 27 * 32, Colours.get(-1, 500, 500, 000), 0x00, 1);
+			screen.render(screen.xOffset + xHealth - 7, screen.yOffset + yHealth, 1 + 27 * 32, Colours.get(-1, 500, 500, 000), 0x01, 1);
 
 			xHealth += 10;
 		}
 
-		for( int i = 0;i < initHealth;i++ )
+		for (int i = 0; i < initHealth; i++)
 		{
-			screen.render( screen.xOffset + xOutline,
-					screen.yOffset + yOutline, 1 + 27 * 32,
-					Colours.get( -1, -1, 500, 000 ), 0x00, 1 );
-			screen.render( screen.xOffset + xOutline - 7, screen.yOffset
-					+ yOutline, 1 + 27 * 32, Colours.get( -1, -1, 500, 000 ),
-					0x01, 1 );
+			screen.render(screen.xOffset + xOutline, screen.yOffset + yOutline, 1 + 27 * 32, Colours.get(-1, -1, 500, 000), 0x00, 1);
+			screen.render(screen.xOffset + xOutline - 7, screen.yOffset + yOutline, 1 + 27 * 32, Colours.get(-1, -1, 500, 000), 0x01, 1);
 
 			xOutline += 10;
 		}
 		// player model
-		screen.render( xOffset + (modifier * flipTop), yOffset, xTile + yTile
-				* 32, colour, flipTop, scale ); // upper
-												// body
-												// part
-												// 1
-		screen.render( xOffset + modifier - (modifier * flipTop), yOffset,
-				(xTile + 1) + yTile * 32, colour, flipTop, scale ); // upper
-																	// body
-																	// part 2
+		screen.render(xOffset + (modifier * flipTop), yOffset, xTile + yTile * 32, colour, flipTop, scale); // upper
+																											// body
+																											// part
+																											// 1
+		screen.render(xOffset + modifier - (modifier * flipTop), yOffset, (xTile + 1) + yTile * 32, colour, flipTop, scale); // upper
+																																// body
+																																// part
+																																// 2
 
-		if( !isSwimming && !isLava )
+		if (!isSwimming && !isLava)
 		{
-			screen.render( xOffset + (modifier * flipBottom), yOffset
-					+ modifier, xTile + (yTile + 1) * 32, colour, flipBottom,
-					scale ); // lower body part 1
+			screen.render(xOffset + (modifier * flipBottom), yOffset + modifier, xTile + (yTile + 1) * 32, colour, flipBottom, scale); // lower
+																																		// body
+																																		// part
+																																		// 1
 
-			screen.render( xOffset + modifier - (modifier * flipBottom),
-					yOffset + modifier, (xTile + 1) + (yTile + 1) * 32, colour,
-					flipBottom, scale ); // lower body part 2
+			screen.render(xOffset + modifier - (modifier * flipBottom), yOffset + modifier, (xTile + 1) + (yTile + 1) * 32, colour, flipBottom, scale); // lower
+																																						// body
+																																						// part
+																																						// 2
 		}
-		
-		if(isBerry && health != initHealth && !isLava && !isSwimming){
+
+		if (isBerry && health != initHealth && !isLava && !isSwimming)
+		{
 			health++;
 		}
 
-		if( username != null )
+		if (username != null)
 		{
-			Font.render( username, screen, xOffset
-					- ((username.length() - 1) / 2 * 8), yOffset - 10,
-					Colours.get( -1, -1, -1, 555 ), 1 );
+			Font.render(username, screen, xOffset - ((username.length() - 1) / 2 * 8), yOffset - 10, Colours.get(-1, -1, -1, 555), 1);
 		}
 	}
 
-	public boolean hasCollided( int xa, int ya )
+	public boolean hasCollided(int xa, int ya)
 	{
 
 		// boolean gm = false;
@@ -293,30 +283,30 @@ public class Player extends Mob
 		int yMin = 3;
 		int yMax = 7;
 
-		for( int x = xMin;x < xMax;x++ )
+		for (int x = xMin; x < xMax; x++)
 		{
-			if( isSolidTile( xa, ya, x, yMin, gm ) )
+			if (isSolidTile(xa, ya, x, yMin, gm))
 			{
 
 			}
 		}
-		for( int x = xMin;x < xMax;x++ )
+		for (int x = xMin; x < xMax; x++)
 		{
-			if( isSolidTile( xa, ya, x, yMax, gm ) )
+			if (isSolidTile(xa, ya, x, yMax, gm))
 			{
 				return true;
 			}
 		}
-		for( int y = yMin;y < yMax;y++ )
+		for (int y = yMin; y < yMax; y++)
 		{
-			if( isSolidTile( xa, ya, xMin, y, gm ) )
+			if (isSolidTile(xa, ya, xMin, y, gm))
 			{
 				return true;
 			}
 		}
-		for( int y = yMin;y < yMax;y++ )
+		for (int y = yMin; y < yMax; y++)
 		{
-			if( isSolidTile( xa, ya, xMax, y, gm ) )
+			if (isSolidTile(xa, ya, xMax, y, gm))
 			{
 				return true;
 			}
@@ -326,37 +316,37 @@ public class Player extends Mob
 	}
 
 	@Override
-	public boolean hasPainfull( int xa, int ya )
+	public boolean hasPainfull(int xa, int ya)
 	{
 		int xMin = 0;
 		int xMax = 7;
 		int yMin = 3;
 		int yMax = 7;
 
-		for( int x = xMin;x < xMax;x++ )
+		for (int x = xMin; x < xMax; x++)
 		{
-			if( isPainfullTile( xa, ya, x, yMin ) )
+			if (isPainfullTile(xa, ya, x, yMin))
 			{
 
 			}
 		}
-		for( int x = xMin;x < xMax;x++ )
+		for (int x = xMin; x < xMax; x++)
 		{
-			if( isPainfullTile( xa, ya, x, yMax ) )
+			if (isPainfullTile(xa, ya, x, yMax))
 			{
 				return true;
 			}
 		}
-		for( int y = yMin;y < yMax;y++ )
+		for (int y = yMin; y < yMax; y++)
 		{
-			if( isPainfullTile( xa, ya, xMin, y ) )
+			if (isPainfullTile(xa, ya, xMin, y))
 			{
 				return true;
 			}
 		}
-		for( int y = yMin;y < yMax;y++ )
+		for (int y = yMin; y < yMax; y++)
 		{
-			if( isPainfullTile( xa, ya, xMax, y ) )
+			if (isPainfullTile(xa, ya, xMax, y))
 			{
 				return true;
 			}
@@ -368,6 +358,6 @@ public class Player extends Mob
 
 	public String getUsername()
 	{
-		return username;
+		return this.username;
 	}
 }
