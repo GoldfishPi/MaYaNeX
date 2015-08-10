@@ -13,6 +13,7 @@ import javax.swing.JOptionPane;
 
 import com.gfp.game.entities.Bullet;
 import com.gfp.game.entities.Player;
+import com.gfp.game.entities.PlayerMP;
 import com.gfp.game.gfx.Colours;
 import com.gfp.game.gfx.Screen;
 import com.gfp.game.gfx.SpriteSheet;
@@ -43,16 +44,18 @@ public class Game extends Canvas implements Runnable
 	private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer())
 			.getData();
 	private int[] colours = new int[6 * 6 * 6];// or 216
-
+	
+	public static Game game;
 	private Screen screen;
 	public InputHandler input;
+	public WindowHandler windowHandler;
 	public static Level level;
 	public Player player;
 	public Bullet bullet;
 	
 	
-	private GameClient socketClient;
-	private GameServer socketServer;
+	public GameClient socketClient;
+	public GameServer socketServer;
 
 	public Game()
 	{
@@ -67,7 +70,7 @@ public class Game extends Canvas implements Runnable
 		frame.add(this, BorderLayout.CENTER);
 		frame.pack();
 
-		frame.setResizable(false);
+		frame.setResizable(true);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 	}
@@ -75,6 +78,7 @@ public class Game extends Canvas implements Runnable
 	public void init()
 	{
 		// red green blue.
+		game = this;
 		int index = 0;
 		for( int r = 0;r < 6;r++ )
 		{
@@ -93,25 +97,18 @@ public class Game extends Canvas implements Runnable
 
 		screen = new Screen(WIDTH, HEIGHT, new SpriteSheet("/SpriteSheet.png"));
 		input = new InputHandler(this);
+		windowHandler = new WindowHandler(this);
 		level = new Level("/levels/Level.png");
-		Packet00Login loginPacket = new Packet00Login(JOptionPane.showInputDialog(this, "Please enter a username"));
-		loginPacket.writeData(socketClient);
 		
-		/*player = new Player(level, 0, 0, input, JOptionPane.showInputDialog(this, "Please enter a username"), 1);
-        level.addEntity(player);*/
-        
-        
-		
-		/*player = new PlayerMP(level, 100, 100, input, JOptionPane.showInputDialog(this, "Please enter a username"),1,
-                null, -1);
+		player = new PlayerMP(level, 100, 100, input, JOptionPane.showInputDialog(this, "Please enter a username"),null, -1);
         level.addEntity(player);
         Packet00Login loginPacket = new Packet00Login(player.getUsername());
-        if (socketServer != null) {
-            socketServer.addConnection((PlayerMP) player, loginPacket);
+        if(socketServer != null){
+        	socketServer.addConnection((PlayerMP)player, loginPacket);
         }
-        loginPacket.writeData(socketClient);*/
-						
-		/*socketClient.sendData( "ping".getBytes() );*/
+       // socketClient.sendData( "ping".getBytes() );
+       /* Packet00Login loginPacket = new Packet00Login(JOptionPane.showInputDialog(this, "Please enter a username"));*/
+		loginPacket.writeData(socketClient);
 
 	}
 
@@ -194,9 +191,7 @@ public class Game extends Canvas implements Runnable
 			{
 
 				LastTimer += 1000;
-			/*	System.out.println(Ticks + " Ticks, " + Frames + " Frames");*/
-				frame.setName("hello"+Integer.toString(Ticks));
-				frame.pack();
+				/*System.out.println(Ticks + " Ticks, " + Frames + " Frames");*/
 				Frames = 0;
 				Ticks = 0;
 

@@ -1,10 +1,12 @@
 package com.gfp.game.entities;
 
+import com.gfp.game.Game;
 import com.gfp.game.InputHandler;
 import com.gfp.game.gfx.Colours;
-import com.gfp.game.gfx.Font;
 import com.gfp.game.gfx.Screen;
 import com.gfp.game.level.Level;
+import com.gfp.game.net.GameClient;
+import com.gfp.game.net.packets.Packet02Move;
 
 public class Player extends Mob
 {
@@ -17,9 +19,9 @@ public class Player extends Mob
 	private int tickCount;
 	public int charic = 28;
 	private String username;
-	public int health = 3;
+	private int health = 3;
 	protected boolean isLava = false;
-	public int timeInLava = 0;
+	private int timeInLava = 0;
 	protected boolean isBerry = false;
 
 	public Bullet bullet;
@@ -80,6 +82,8 @@ public class Player extends Mob
 		{
 			move(xa, ya);
 			isMoving = true;
+			Packet02Move packet = new Packet02Move(this.getUsername(), this.x, this.y);
+			packet.writeData(Game.game.socketClient);
 		} else
 		{
 			isMoving = false;
@@ -130,6 +134,8 @@ public class Player extends Mob
 	{
 		int xTile = 0;
 		int yTile = charic;
+		
+		
 
 		int walkingSpeed = 4;
 		int flipTop = (numSteps >> walkingSpeed) & 1;
@@ -235,6 +241,7 @@ public class Player extends Mob
 
 		for (int i = 0; i < initHealth; i++)
 		{
+			//screen.xOffset + xOutline, screen.yOffset + yOutline, 1 + 27 * 32 old position
 			screen.render(screen.xOffset + xOutline, screen.yOffset + yOutline, 1 + 27 * 32, Colours.get(-1, -1, 500, 000), 0x00, 1);
 			screen.render(screen.xOffset + xOutline - 7, screen.yOffset + yOutline, 1 + 27 * 32, Colours.get(-1, -1, 500, 000), 0x01, 1);
 
@@ -270,7 +277,7 @@ public class Player extends Mob
 
 		if (username != null)
 		{
-			Font.render(username, screen, xOffset - ((username.length() - 1) / 2 * 8), yOffset - 10, Colours.get(-1, -1, -1, 555), 1);
+			//Font.render(username, screen, xOffset - ((username.length() - 1) / 2 * 8), yOffset - 10, Colours.get(-1, -1, -1, 555), 1);
 		}
 	}
 

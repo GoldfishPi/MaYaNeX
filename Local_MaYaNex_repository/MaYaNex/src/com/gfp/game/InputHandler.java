@@ -8,9 +8,9 @@ import java.util.List;
 public class InputHandler implements KeyListener
 {
 
-	public InputHandler( Game game )
+	public InputHandler(Game game)
 	{
-		game.addKeyListener( this );
+		game.addKeyListener(this);
 	}
 
 	public class Key
@@ -29,11 +29,11 @@ public class InputHandler implements KeyListener
 			return numTimesPressed;
 		}
 
-		public void toggle( boolean isPressed )
+		public void toggle(boolean isPressed)
 		{
 			Pressed = isPressed;
 
-			if( isPressed )
+			if (isPressed)
 			{
 				numTimesPressed++;
 			}
@@ -60,82 +60,88 @@ public class InputHandler implements KeyListener
 	public Key Nine = new Key();
 
 	@Override
-	public void keyTyped( KeyEvent e )
+	public void keyTyped(KeyEvent e)
 	{
 
 	}
 
 	@Override
-	public void keyPressed( KeyEvent e )
+	public void keyPressed(KeyEvent e)
 	{
-		toggleKey( e.getKeyCode(), true );
+		toggleKey(e.getKeyCode(), true);
 
 	}
 
 	@Override
-	public void keyReleased( KeyEvent e )
+	public void keyReleased(KeyEvent e)
 	{
-		toggleKey( e.getKeyCode(), false );
+		toggleKey(e.getKeyCode(), false);
 
 	}
 
-	public void toggleKey( int keyCode, boolean isPressed )
+	public void toggleKey(int keyCode, boolean isPressed)
 	{
-		if( keyCode == KeyEvent.VK_W || keyCode == KeyEvent.VK_UP )
+		if (keyCode == KeyEvent.VK_W || keyCode == KeyEvent.VK_UP)
 		{
-			Up.toggle( isPressed );
+			Up.toggle(isPressed);
 		}
-		if( keyCode == KeyEvent.VK_S || keyCode == KeyEvent.VK_DOWN )
+		if (keyCode == KeyEvent.VK_S || keyCode == KeyEvent.VK_DOWN)
 		{
-			Down.toggle( isPressed );
+			Down.toggle(isPressed);
 		}
-		if( keyCode == KeyEvent.VK_A || keyCode == KeyEvent.VK_LEFT )
+		if (keyCode == KeyEvent.VK_A || keyCode == KeyEvent.VK_LEFT)
 		{
-			Left.toggle( isPressed );
+			Left.toggle(isPressed);
 		}
-		if( keyCode == KeyEvent.VK_D || keyCode == KeyEvent.VK_RIGHT )
+		if (keyCode == KeyEvent.VK_D || keyCode == KeyEvent.VK_RIGHT)
 		{
-			Right.toggle( isPressed );
+			Right.toggle(isPressed);
 		}
-		if( keyCode == KeyEvent.VK_0 )
+
+		if (keyCode == KeyEvent.VK_J)
 		{
-			Zero.toggle( isPressed );
+			J.toggle(isPressed);
 		}
-		if( keyCode == KeyEvent.VK_1 )
+
+		if (keyCode == KeyEvent.VK_0)
 		{
-			One.toggle( isPressed );
+			Zero.toggle(isPressed);
 		}
-		if( keyCode == KeyEvent.VK_2 )
+		if (keyCode == KeyEvent.VK_1)
 		{
-			Two.toggle( isPressed );
+			One.toggle(isPressed);
 		}
-		if( keyCode == KeyEvent.VK_3 )
+		if (keyCode == KeyEvent.VK_2)
 		{
-			Three.toggle( isPressed );
+			Two.toggle(isPressed);
 		}
-		if( keyCode == KeyEvent.VK_4 )
+		if (keyCode == KeyEvent.VK_3)
 		{
-			Four.toggle( isPressed );
+			Three.toggle(isPressed);
 		}
-		if( keyCode == KeyEvent.VK_5 )
+		if (keyCode == KeyEvent.VK_4)
 		{
-			Five.toggle( isPressed );
+			Four.toggle(isPressed);
 		}
-		if( keyCode == KeyEvent.VK_6 )
+		if (keyCode == KeyEvent.VK_5)
 		{
-			Six.toggle( isPressed );
+			Five.toggle(isPressed);
 		}
-		if( keyCode == KeyEvent.VK_7 )
+		if (keyCode == KeyEvent.VK_6)
 		{
-			Seven.toggle( isPressed );
+			Six.toggle(isPressed);
 		}
-		if( keyCode == KeyEvent.VK_8 )
+		if (keyCode == KeyEvent.VK_7)
 		{
-			Eight.toggle( isPressed );
+			Seven.toggle(isPressed);
 		}
-		if( keyCode == KeyEvent.VK_9 )
+		if (keyCode == KeyEvent.VK_8)
 		{
-			Nine.toggle( isPressed );
+			Eight.toggle(isPressed);
+		}
+		if (keyCode == KeyEvent.VK_9)
+		{
+			Nine.toggle(isPressed);
 		}
 
 	}
