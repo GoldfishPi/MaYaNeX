@@ -1,17 +1,17 @@
 package com.gfp.game.level.Tiles;
 
-import com.gfp.game.gfx.Screen;
-import com.gfp.game.level.Level;
 
 public class InteractionTile extends BasicSolidTile {
 	private int currentAnimationIndex;
 	private int[][] animationTileCords;
+	@SuppressWarnings("unused")
 	private long lastIterationTime;
+	@SuppressWarnings("unused")
 	private int animationSwitchDelay;
 	public static boolean open = false;
 			
 
-	public InteractionTile(int id, int[][] animationCords,int tileColour, int levelColour) {
+	public InteractionTile(int id, int[][] animationCords,int tileColour, int levelColour, int animationSwitchDelay) {
 		super(id, animationCords[0][0], animationCords[0][1], tileColour,levelColour);
 		this.animationTileCords = animationCords;
 		this.currentAnimationIndex = 0;

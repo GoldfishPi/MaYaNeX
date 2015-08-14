@@ -1,7 +1,5 @@
 package com.gfp.game.net.packets;
 
-import java.nio.IntBuffer;
-
 import com.gfp.game.net.GameClient;
 import com.gfp.game.net.GameServer;
 

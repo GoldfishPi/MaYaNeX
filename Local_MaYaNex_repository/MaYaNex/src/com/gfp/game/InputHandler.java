@@ -47,6 +47,7 @@ public class InputHandler implements KeyListener
 	public Key Left = new Key();
 	public Key Right = new Key();
 	public Key J = new Key();
+	public Key K = new Key();
 
 	public Key Zero = new Key();
 	public Key One = new Key();
@@ -142,6 +143,10 @@ public class InputHandler implements KeyListener
 		if (keyCode == KeyEvent.VK_9)
 		{
 			Nine.toggle(isPressed);
+		}
+		if(keyCode == KeyEvent.VK_K)
+		{
+			K.toggle(isPressed);
 		}
 
 	}

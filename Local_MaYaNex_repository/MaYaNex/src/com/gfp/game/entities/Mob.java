@@ -1,7 +1,6 @@
 package com.gfp.game.entities;
 
 import com.gfp.game.level.Level;
-import com.gfp.game.level.Tiles.InteractionTile;
 import com.gfp.game.level.Tiles.Tile;
 
 public abstract class Mob extends Entity

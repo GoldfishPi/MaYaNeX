@@ -52,6 +52,7 @@ public class GameServer extends Thread
 		}
 	}
 
+	@SuppressWarnings("static-access")
 	private void parsePacket(byte[] data, InetAddress address, int port)
 	{
 		String message = new String(data).trim();
@@ -75,7 +76,7 @@ public class GameServer extends Thread
 			break;
 		case MOVE:
 			packet = new Packet02Move(data);
-			System.out.println(((Packet02Move) packet).getUsername() + " Has Moved to" + ((Packet02Move) packet).getX() + ","
+			game.debug(Game.DebugLevel.INFO, ((Packet02Move) packet).getUsername() + " Has Moved to " + ((Packet02Move) packet).getX() + ","
 					+ ((Packet02Move) packet).getY());
 			this.handleMove(((Packet02Move) packet));
 			packet.writeData(this);
@@ -107,7 +108,7 @@ public class GameServer extends Thread
 
 				// relay to the new player that the currently connect player
 				// exists
-				packet = new Packet00Login(p.getUsername());
+				packet = new Packet00Login(p.getUsername(),p.x, p.y);
 				sendData(packet.getData(), player.ipAddress, player.port);
 			}
 		}

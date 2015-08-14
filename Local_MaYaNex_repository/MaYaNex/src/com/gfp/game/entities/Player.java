@@ -5,7 +5,7 @@ import com.gfp.game.InputHandler;
 import com.gfp.game.gfx.Colours;
 import com.gfp.game.gfx.Screen;
 import com.gfp.game.level.Level;
-import com.gfp.game.net.GameClient;
+import com.gfp.game.level.Tiles.Tile;
 import com.gfp.game.net.packets.Packet02Move;
 
 public class Player extends Mob
@@ -23,6 +23,7 @@ public class Player extends Mob
 	protected boolean isLava = false;
 	private int timeInLava = 0;
 	protected boolean isBerry = false;
+	private int op = 0;
 
 	public Bullet bullet;
 
@@ -58,25 +59,36 @@ public class Player extends Mob
 				xa += 1;
 
 			}
-		}
-		/*if (input.J.isPressed())
-		{
-			bullet = new Bullet(level, "bullet", 5, 5, 1);
-			level.addEntity(bullet);
-		}
-
-		if (input.One.isPressed())
-		{
-			if (gm == false)
+			if (input.J.isPressed())
 			{
-				gm = true;
-				isSwimming = true;
-			} else if (gm == true)
-			{
-				gm = false;
-				isSwimming = false;
+				Game.changeLevel("/levels/smallLevel.png", x, y);
 			}
-		}*/
+
+			if (input.K.isPressed())
+			{
+				int tile;
+				int xTile = 0;
+				int yTile = 0;
+				
+				yTile =
+				level.tiles[xTile + yTile] = Tile.LAVA.getid();
+
+				op++;
+			}
+
+			if (input.One.isPressed())
+			{
+				if (gm == false)
+				{
+					gm = true;
+					isSwimming = true;
+				} else if (gm == true)
+				{
+					gm = false;
+					isSwimming = false;
+				}
+			}
+		}
 
 		if (xa != 0 || ya != 0)
 		{
@@ -134,8 +146,6 @@ public class Player extends Mob
 	{
 		int xTile = 0;
 		int yTile = charic;
-		
-		
 
 		int walkingSpeed = 4;
 		int flipTop = (numSteps >> walkingSpeed) & 1;
@@ -241,7 +251,8 @@ public class Player extends Mob
 
 		for (int i = 0; i < initHealth; i++)
 		{
-			//screen.xOffset + xOutline, screen.yOffset + yOutline, 1 + 27 * 32 old position
+			// screen.xOffset + xOutline, screen.yOffset + yOutline, 1 + 27 * 32
+			// old position
 			screen.render(screen.xOffset + xOutline, screen.yOffset + yOutline, 1 + 27 * 32, Colours.get(-1, -1, 500, 000), 0x00, 1);
 			screen.render(screen.xOffset + xOutline - 7, screen.yOffset + yOutline, 1 + 27 * 32, Colours.get(-1, -1, 500, 000), 0x01, 1);
 
@@ -277,7 +288,8 @@ public class Player extends Mob
 
 		if (username != null)
 		{
-			//Font.render(username, screen, xOffset - ((username.length() - 1) / 2 * 8), yOffset - 10, Colours.get(-1, -1, -1, 555), 1);
+			// Font.render(username, screen, xOffset - ((username.length() - 1)
+			// / 2 * 8), yOffset - 10, Colours.get(-1, -1, -1, 555), 1);
 		}
 	}
 

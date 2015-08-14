@@ -31,7 +31,7 @@ public abstract class Tile
 	public static final Tile CHEST = new InteractionTile( 7, new int[][]
 	{
 	{ 0, 6 },
-	{ 1, 6 } }, Colours.get( 123, 346, 000, 142 ), 0xFFc5c500 );
+	{ 1, 6 } }, Colours.get( 123, 346, 000, 142 ), 0xFFc5c500, 00 );
 	public static final Tile LAVA = new AnimatedTile( 8, new int[][]{ {4, 5}, { 5, 5}, {6, 5},{7,5},{8, 5},{7,5},{6,5}, {5,5} }, Colours.get(-1, 400, 500, -1), 0xFFff1500, 600);
 	protected byte id;
 	protected boolean solid;

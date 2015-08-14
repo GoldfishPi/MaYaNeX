@@ -3,7 +3,6 @@ package com.gfp.game;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
-import com.gfp.game.net.packets.Packet;
 import com.gfp.game.net.packets.Packet01Disconnect;
 
 public class WindowHandler implements WindowListener

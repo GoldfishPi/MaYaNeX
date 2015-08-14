@@ -16,7 +16,7 @@ import com.gfp.game.level.Tiles.Tile;
 public class Level
 {
 
-	private byte[] tiles;
+	public byte[] tiles;
 	public int width;
 	public int height;
 
