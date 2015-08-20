@@ -165,6 +165,49 @@ public class Level
 		return Tile.tiles[tiles[x + y * width]];
 	}
 
+	public int cordstoTile(int x, int y)
+	{
+		int tileCord;
+		int xCord = x / 8;
+		int yCord = 0;
+		for (int i = 0; i < y / 8; i++)
+		{
+			yCord += width;
+		}
+		tileCord = xCord + yCord;
+		return tileCord;
+	}
+
+	public boolean switchTiles(int x, int y, int xTile, int yTile, Tile tile)
+	{
+		if (this.cordstoTile(x, y) == this.cordstoTile(xTile, yTile))
+		{
+
+		}
+		return false;
+	}
+
+	public int checkSurroundingTiles(int x, int y, int lookingTileId, int replacTileId)
+	{
+		if (this.getTile(x >> 3, y + 8 >> 3).getid() == lookingTileId)
+		{
+			return 0;
+		} else if (this.getTile(x - 8 >> 3, y >> 3).getid() == lookingTileId)
+		{
+			return 1;
+		}
+		if (this.getTile(x >> 3, y - 8 >> 3).getid() == lookingTileId)
+		{
+			return 2;
+		} else if (this.getTile(x + 8 >> 3, y >> 3).getid() == lookingTileId)
+		{
+			return 3;
+		} else
+		{
+			return -1;
+		}
+	}
+
 	public void addEntity(Entity entity)
 	{
 		this.entities.add(entity);
@@ -207,4 +250,5 @@ public class Level
 		this.entities.get(index).x = x;
 		this.entities.get(index).y = y;
 	}
+
 }

@@ -16,6 +16,7 @@ import com.gfp.game.entities.PlayerMP;
 import com.gfp.game.gfx.Screen;
 import com.gfp.game.gfx.SpriteSheet;
 import com.gfp.game.level.Level;
+import com.gfp.game.level.generateLevel;
 import com.gfp.game.level.Tiles.Tile;
 import com.gfp.game.net.GameClient;
 import com.gfp.game.net.GameServer;
@@ -29,7 +30,7 @@ public class Game extends Canvas implements Runnable
 
 	public static final int WIDTH = 160;// 300
 	public static final int HEIGHT = WIDTH / 12 * 9;
-	public static final int SCALE = 3;
+	public static final int SCALE = 5;
 	public static final String NAME = "MaYiNeX";
 	public static final Dimension DIMENSIONS = new Dimension(WIDTH * SCALE, HEIGHT * SCALE);
 
@@ -83,7 +84,7 @@ public class Game extends Canvas implements Runnable
 
 		screen = new Screen(WIDTH, HEIGHT, new SpriteSheet("/SpriteSheet.png"));
 		input = new InputHandler(this);
-		level = new Level("/levels/Level.png");
+		level = new generateLevel("/levels/GenLevel.png");
 
 		player = new PlayerMP(level, 100, 100, input, JOptionPane.showInputDialog(this, "Please enter a username"), null, -1);
 		level.addEntity(player);
@@ -187,7 +188,8 @@ public class Game extends Canvas implements Runnable
 			{
 
 				LastTimer += 1000;
-				debug(DebugLevel.INFO, Ticks + " Ticks, " + Frames + " Frames"); 
+				frame.setTitle(NAME + " " + Ticks + " Ticks, " + Frames + " Frames");
+				//debug(DebugLevel.INFO, Ticks + " Ticks, " + Frames + " Frames"); 
 				Frames = 0;
 				Ticks = 0;
 
@@ -224,7 +226,7 @@ public class Game extends Canvas implements Runnable
 			// The higher number here the better it will be at reducing tearing
 			// in the image.
 			// erik
-			createBufferStrategy(3);
+			createBufferStrategy(5);
 			return;
 		}
 
@@ -259,7 +261,7 @@ public class Game extends Canvas implements Runnable
 
 	}
 
-	public void debug(DebugLevel level, String message)
+	public static void debug(DebugLevel level, String message)
 	{
 		switch(level){
 		default:
@@ -273,7 +275,7 @@ public class Game extends Canvas implements Runnable
 			break;
 		case SEVERE:
 			System.out.println("["+NAME+"] [SEVERE] "+message);
-			this.stop();
+			game.stop();
 			break;
 		}
 	}

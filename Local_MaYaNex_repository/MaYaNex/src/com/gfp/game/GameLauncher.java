@@ -45,7 +45,7 @@ public class GameLauncher extends Applet
 		game.setMaximumSize(game.DIMENSIONS);
 		game.setPreferredSize(game.DIMENSIONS);
 
-		game.frame = new JFrame(game.NAME);
+		game.frame = new JFrame();
 		game.frame.setDefaultCloseOperation(game.frame.EXIT_ON_CLOSE);
 		game.frame.setLayout(new BorderLayout());
 

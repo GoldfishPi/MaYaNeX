@@ -33,6 +33,8 @@ public abstract class Tile
 	{ 0, 6 },
 	{ 1, 6 } }, Colours.get( 123, 346, 000, 142 ), 0xFFc5c500, 00 );
 	public static final Tile LAVA = new AnimatedTile( 8, new int[][]{ {4, 5}, { 5, 5}, {6, 5},{7,5},{8, 5},{7,5},{6,5}, {5,5} }, Colours.get(-1, 400, 500, -1), 0xFFff1500, 600);
+	public static final Tile OPENDOOR = new BasicTile(9, 2, 1, Colours.get(131, 111, 333, -1),0xFF000000 );
+	public static final Tile CLOSEDOOR = new BasicSolidTile(10, 1, 1, Colours.get(131, 111, 333, -1),0xFFb33f00 );
 	protected byte id;
 	protected boolean solid;
 	protected boolean emitter;

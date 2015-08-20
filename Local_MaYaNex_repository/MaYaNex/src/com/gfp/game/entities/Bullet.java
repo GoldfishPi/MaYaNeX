@@ -21,28 +21,28 @@ public class Bullet extends Mob {
 
 		for( int x = xMin;x < xMax;x++ )
 		{
-			if( isSolidTile( xa, ya, x, yMin, gm ) )
+			if( isSolidTile( xa, ya, x, yMin ) )
 			{
 
 			}
 		}
 		for( int x = xMin;x < xMax;x++ )
 		{
-			if( isSolidTile( xa, ya, x, yMax, gm ) )
+			if( isSolidTile( xa, ya, x, yMax ) )
 			{
 				return true;
 			}
 		}
 		for( int y = yMin;y < yMax;y++ )
 		{
-			if( isSolidTile( xa, ya, xMin, y, gm ) )
+			if( isSolidTile( xa, ya, xMin, y ) )
 			{
 				return true;
 			}
 		}
 		for( int y = yMin;y < yMax;y++ )
 		{
-			if( isSolidTile( xa, ya, xMax, y, gm ) )
+			if( isSolidTile( xa, ya, xMax, y ) )
 			{
 				return true;
 			}

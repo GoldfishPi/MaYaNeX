@@ -63,8 +63,7 @@ public abstract class Mob extends Entity
 
 	public abstract boolean hasCollided( int xa, int ya );
 
-	protected boolean isSolidTile( int xa, int ya, int x, int y,
-			boolean flightMode )
+	protected boolean isSolidTile( int xa, int ya, int x, int y )
 	{
 
 		if( level == null )

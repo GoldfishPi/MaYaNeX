@@ -3,6 +3,7 @@ package com.gfp.game.entities;
 import com.gfp.game.Game;
 import com.gfp.game.InputHandler;
 import com.gfp.game.gfx.Colours;
+import com.gfp.game.gfx.Font;
 import com.gfp.game.gfx.Screen;
 import com.gfp.game.level.Level;
 import com.gfp.game.level.Tiles.Tile;
@@ -23,9 +24,9 @@ public class Player extends Mob
 	protected boolean isLava = false;
 	private int timeInLava = 0;
 	protected boolean isBerry = false;
-	private int op = 0;
-
+	
 	public Bullet bullet;
+	private boolean placeTile = false;
 
 	public Player(Level level, int x, int y, InputHandler input, String username)
 	{
@@ -61,19 +62,16 @@ public class Player extends Mob
 			}
 			if (input.J.isPressed())
 			{
-				Game.changeLevel("/levels/smallLevel.png", x, y);
+				Game.changeLevel("/levels/smallLevel.png", 0, 0);
 			}
 
 			if (input.K.isPressed())
 			{
-				int tile;
-				int xTile = 0;
-				int yTile = 0;
-				
-				yTile =
-				level.tiles[xTile + yTile] = Tile.LAVA.getid();
-
-				op++;
+				placeTile = true;
+			}
+			if (placeTile == true && !input.K.isPressed())
+			{
+				placeTile = false;
 			}
 
 			if (input.One.isPressed())
@@ -164,15 +162,14 @@ public class Player extends Mob
 			xTile += 2;
 		} else if (movingDir > 1)
 		{
-			if (isMoving == true)
-			{
-				xTile += 4 + ((numSteps >> walkingSpeed) & 1) * 2;
-				flipTop = (movingDir - 1) % 2;
-				flipBottom = (movingDir - 1) % 2;
-			} else
-			{
-				xTile += 4;
-			}
+			xTile += 4 + ((numSteps >> walkingSpeed) & 1) * 2;
+			flipTop = (movingDir - 1) % 2;
+			flipBottom = (movingDir - 1) % 2;
+			/*
+			 * if (isMoving == true) { xTile += 4 + ((numSteps >> walkingSpeed)
+			 * & 1) * 2; flipTop = (movingDir - 1) % 2; flipBottom = (movingDir
+			 * - 1) % 2; } else { xTile += 4; }
+			 */
 		}
 
 		int modifier = 8 * scale;
@@ -288,8 +285,29 @@ public class Player extends Mob
 
 		if (username != null)
 		{
-			// Font.render(username, screen, xOffset - ((username.length() - 1)
-			// / 2 * 8), yOffset - 10, Colours.get(-1, -1, -1, 555), 1);
+			Font.render(username, screen, xOffset - ((username.length() - 1) / 2 * 8), yOffset - 10, Colours.get(-1, -1, -1, 555), 1);
+		}
+
+		if (placeTile)
+		{
+			placeTile = false;
+			int openCheck = level.checkSurroundingTiles(x, y, 10, 9);
+			int closeCheck = level.checkSurroundingTiles(x, y, 9, 10);
+			Game.debug(Game.DebugLevel.INFO, Integer.toString(openCheck));
+			if (openCheck == 2)
+			{
+				level.tiles[level.cordstoTile(x, y - 8)] = Tile.OPENDOOR.getid();
+			}else if (openCheck == 0)
+			{
+				level.tiles[level.cordstoTile(x, y + 8)] = Tile.OPENDOOR.getid();
+			}
+			else if (closeCheck == 2)
+			{
+				level.tiles[level.cordstoTile(x, y - 8)] = Tile.CLOSEDOOR.getid();
+			}else if (closeCheck == 0)
+			{
+				level.tiles[level.cordstoTile(x, y + 8)] = Tile.CLOSEDOOR.getid();
+			}
 		}
 	}
 
@@ -304,34 +322,39 @@ public class Player extends Mob
 
 		for (int x = xMin; x < xMax; x++)
 		{
-			if (isSolidTile(xa, ya, x, yMin, gm))
+			if (isSolidTile(xa, ya, x, yMin))
 			{
 
 			}
 		}
 		for (int x = xMin; x < xMax; x++)
 		{
-			if (isSolidTile(xa, ya, x, yMax, gm))
+			if (isSolidTile(xa, ya, x, yMax))
 			{
 				return true;
 			}
 		}
 		for (int y = yMin; y < yMax; y++)
 		{
-			if (isSolidTile(xa, ya, xMin, y, gm))
+			if (isSolidTile(xa, ya, xMin, y))
 			{
 				return true;
 			}
 		}
 		for (int y = yMin; y < yMax; y++)
 		{
-			if (isSolidTile(xa, ya, xMax, y, gm))
+			if (isSolidTile(xa, ya, xMax, y))
 			{
 				return true;
 			}
 		}
 
 		return false;
+	}
+
+	public void toggleDoor()
+	{
+
 	}
 
 	@Override

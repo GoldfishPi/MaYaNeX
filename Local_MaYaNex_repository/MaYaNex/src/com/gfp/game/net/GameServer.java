@@ -76,8 +76,8 @@ public class GameServer extends Thread
 			break;
 		case MOVE:
 			packet = new Packet02Move(data);
-			game.debug(Game.DebugLevel.INFO, ((Packet02Move) packet).getUsername() + " Has Moved to " + ((Packet02Move) packet).getX() + ","
-					+ ((Packet02Move) packet).getY());
+			/*game.debug(Game.DebugLevel.INFO, ((Packet02Move) packet).getUsername() + " Has Moved to " + ((Packet02Move) packet).getX() + ","
+					+ ((Packet02Move) packet).getY());*/
 			this.handleMove(((Packet02Move) packet));
 			packet.writeData(this);
 			break;
