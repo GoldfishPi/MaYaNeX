@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.gfp.game.Game;
 import com.gfp.game.entities.PlayerMP;
+import com.gfp.game.level.Seed;
 import com.gfp.game.net.packets.Packet;
 import com.gfp.game.net.packets.Packet.PacketTypes;
 import com.gfp.game.net.packets.Packet00Login;
@@ -175,8 +176,13 @@ public class GameServer extends Thread
 		if (getPlayerMP(packet.getUsername()) != null)
 		{
 			int index = getPlayerMPIndex(packet.getUsername());
-			this.connectedPlayers.get(index).x = packet.getX();
-			this.connectedPlayers.get(index).x = packet.getY();
+			PlayerMP player = this.connectedPlayers.get(index);
+			player.x = packet.getX();
+			player.x = packet.getY();
+			player.setMoving(packet.isMoving());
+			player.setMovingDir(packet.getMovingDir());
+			player.setNumSteps(packet.getNumSteps());
+			packet.writeData(this);
 		}
 	}
 }

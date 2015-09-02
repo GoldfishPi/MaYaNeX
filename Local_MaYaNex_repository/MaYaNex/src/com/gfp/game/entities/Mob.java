@@ -1,5 +1,6 @@
 package com.gfp.game.entities;
 
+import com.gfp.game.Game;
 import com.gfp.game.level.Level;
 import com.gfp.game.level.Tiles.Tile;
 
@@ -12,9 +13,8 @@ public abstract class Mob extends Entity
 	protected boolean isMoving;
 	protected int movingDir = 1;
 	protected int scale = 1;
-	protected int health;
 
-	public Mob( Level level, String name, int x, int y, int speed )
+	public Mob( Level level, String name, int x, int y, int speed, int health )
 	{
 		super( level );
 		this.name = name;
@@ -54,11 +54,6 @@ public abstract class Mob extends Entity
 			x += xa * speed;
 			y += ya * speed;
 		}
-
-		if( hasPainfull( xa, ya ) )
-		{
-			health --;
-		}
 	}
 
 	public abstract boolean hasCollided( int xa, int ya );
@@ -70,8 +65,8 @@ public abstract class Mob extends Entity
 		{
 			return false;
 		}
-		Tile lastTile = level.getTile( (this.x + x) >> 3, (this.y + y) >> 3 );
-		Tile newTile = level.getTile( (this.x + x + xa) >> 3,
+		Tile lastTile = Game.level.getTile( (this.x + x) >> 3, (this.y + y) >> 3 );
+		Tile newTile = Game.level.getTile( (this.x + x + xa) >> 3,
 				(this.y + y + ya) >> 3 );
 
 		if( !lastTile.equals( newTile ) && newTile.isSolid() )
@@ -82,45 +77,46 @@ public abstract class Mob extends Entity
 		return false;
 	}
 
-	public abstract boolean hasPainfull( int xa, int ya );
-
-	protected boolean isPainfullTile( int xa, int ya, int x, int y )
-	{
-		if( level == null )
-		{
-			return false;
-		}
-
-		Tile lastTile = level.getTile( (this.x + x) >> 3, (this.y + y) >> 3 );
-		Tile newTile = level.getTile( (this.x + x + xa) >> 3,
-				(this.y + y + ya) >> 3 );
-
-		if( !lastTile.equals( newTile ) && newTile.isPainfull() )
-		{
-			return true;
-		}
-
-		return false;
-	}
-
-	/*
-	 * protected boolean isActivatorTile(int xa, int ya, int x, int y ){
-	 * 
-	 * Tile lastTile = level.getTile((this.x + x) >> 3,(this.y+y) >> 3); Tile
-	 * newTile = level.getTile((this.x + x + xa)>> 3 , (this.y + y + ya) >> 3);
-	 * 
-	 * if(!lastTile.equals(newTile) && newTile.isActivator()){
-	 * InteractionTile.open = true; return true;
-	 * 
-	 * } return false; }
-	 */
-
 	public String getName()
 	{
 		return name;
 	}
 	
-	protected int health(){
-		return health;
+	protected int getHealth(){
+		return 1;
+	}
+	
+	public void changeLevel(Level level){
+		this.level = level;
+	}
+
+	public int getNumSteps()
+	{
+		return numSteps;
+	}
+
+	public void setNumSteps(int numSteps)
+	{
+		this.numSteps = numSteps;
+	}
+
+	public boolean isMoving()
+	{
+		return isMoving;
+	}
+
+	public void setMoving(boolean isMoving)
+	{
+		this.isMoving = isMoving;
+	}
+
+	public int getMovingDir()
+	{
+		return movingDir;
+	}
+
+	public void setMovingDir(int movingDir)
+	{
+		this.movingDir = movingDir;
 	}
 }

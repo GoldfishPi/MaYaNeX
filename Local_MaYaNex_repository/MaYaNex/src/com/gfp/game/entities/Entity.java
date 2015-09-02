@@ -7,6 +7,7 @@ public abstract class Entity {
 
 	public int x;
 	public int y;
+	public int health;
 	protected Level level;
 	
 	public Entity(Level level){

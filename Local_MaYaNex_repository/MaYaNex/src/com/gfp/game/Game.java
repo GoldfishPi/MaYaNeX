@@ -15,6 +15,7 @@ import com.gfp.game.entities.Player;
 import com.gfp.game.entities.PlayerMP;
 import com.gfp.game.gfx.Screen;
 import com.gfp.game.gfx.SpriteSheet;
+import com.gfp.game.gui.Gui;
 import com.gfp.game.level.Level;
 import com.gfp.game.level.generateLevel;
 import com.gfp.game.level.Tiles.Tile;
@@ -49,8 +50,8 @@ public class Game extends Canvas implements Runnable
 	public static InputHandler input;
 	public WindowHandler windowHandler;
 	public static Level level;
-	public Player player;
-	public Bullet bullet;
+	public static Player player;
+	public static Gui gui;
 
 	public GameClient socketClient;
 	public GameServer socketServer;
@@ -85,21 +86,25 @@ public class Game extends Canvas implements Runnable
 		screen = new Screen(WIDTH, HEIGHT, new SpriteSheet("/SpriteSheet.png"));
 		input = new InputHandler(this);
 		level = new generateLevel("/levels/GenLevel.png");
+		/* level = new Level("/levels/Level.png"); */
 
-		player = new PlayerMP(level, 100, 100, input, JOptionPane.showInputDialog(this, "Please enter a username"), null, -1);
-		level.addEntity(player);
-		Packet00Login loginPacket = new Packet00Login(player.getUsername(), player.x, player.y);
-		if (socketServer != null)
-		{
-			socketServer.addConnection((PlayerMP) player, loginPacket);
-		}
-		// socketClient.sendData( "ping".getBytes() );
 		/*
-		 * Packet00Login loginPacket = new
-		 * Packet00Login(JOptionPane.showInputDialog(this,
-		 * "Please enter a username"));
+		 * player = new PlayerMP(level, 100, 100, input,
+		 * JOptionPane.showInputDialog(this, "Please enter a username"), null,
+		 * -1);
 		 */
-		loginPacket.writeData(socketClient);
+		player = new Player(level, 100, 100, input, JOptionPane.showInputDialog(this, "Please enter a username"));
+		gui = new Gui(level, screen, player);
+		level.addEntity(player);
+		level.addEntity(gui);
+
+		/*
+		 * Packet00Login loginPacket = new Packet00Login(player.getUsername(),
+		 * player.x, player.y); if (socketServer != null) {
+		 * socketServer.addConnection((PlayerMP) player, loginPacket); }
+		 * 
+		 * loginPacket.writeData(socketClient);
+		 */
 
 	}
 
@@ -108,19 +113,12 @@ public class Game extends Canvas implements Runnable
 		Running = true;
 		thread = new Thread(this, NAME + "_main");
 		thread.start();
-		if (JOptionPane.showConfirmDialog(this, "Do you want to run the server?") == 0)
-		{
-			socketServer = new GameServer(this);
-			socketServer.start();
-		}
-		socketClient = new GameClient(this, "localhost");
-		socketClient.start();
 		/*
-		 * if(JOptionPane.showConfirmDialog( this, "Would you like muxic?" )
-		 * ==0){ String audioFilePath = "msc/sao8bit.wav"; music player = new
-		 * music(); player.play(audioFilePath); }
+		 * if (JOptionPane.showConfirmDialog(this,
+		 * "Do you want to run the server?") == 0) { socketServer = new
+		 * GameServer(this); socketServer.start(); } socketClient = new
+		 * GameClient(this, "localhost"); socketClient.start();
 		 */
-
 	}
 
 	synchronized void stop()
@@ -189,7 +187,6 @@ public class Game extends Canvas implements Runnable
 
 				LastTimer += 1000;
 				frame.setTitle(NAME + " " + Ticks + " Ticks, " + Frames + " Frames");
-				//debug(DebugLevel.INFO, Ticks + " Ticks, " + Frames + " Frames"); 
 				Frames = 0;
 				Ticks = 0;
 
@@ -263,18 +260,20 @@ public class Game extends Canvas implements Runnable
 
 	public static void debug(DebugLevel level, String message)
 	{
-		switch(level){
+		switch (level)
+		{
 		default:
 		case INFO:
-			if(debug){
-				System.out.println("[" +NAME+"]"+message);
+			if (debug)
+			{
+				System.out.println("[" + NAME + "]" + message);
 			}
 			break;
 		case WARNING:
-			System.out.println("[" +NAME+"] [WARNING] "+message);
+			System.out.println("[" + NAME + "] [WARNING] " + message);
 			break;
 		case SEVERE:
-			System.out.println("["+NAME+"] [SEVERE] "+message);
+			System.out.println("[" + NAME + "] [SEVERE] " + message);
 			game.stop();
 			break;
 		}
@@ -284,11 +283,20 @@ public class Game extends Canvas implements Runnable
 	{
 		INFO, WARNING, SEVERE;
 	}
-	
-	public static void changeLevel(String levelPath, int x, int y){
-		level = new Level(levelPath);    
-		Player player = new Player(level, x, y, input, "hi");
+
+	public static void changeLevel(String levelPath, int x, int y)
+	{
+
+		level = new generateLevel(levelPath);
 		level.addEntity(player);
+		player.changeLevel(level);
+		level.addEntity(gui);
+	}
+
+	public static void summonBullet(int x, int y)
+	{
+		Bullet bullet = new Bullet(level, "hi", x, y, 3, input);
+		level.addEntity(bullet);
 	}
 
 }

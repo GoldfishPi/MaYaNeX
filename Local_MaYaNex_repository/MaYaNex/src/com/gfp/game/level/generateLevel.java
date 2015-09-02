@@ -3,20 +3,34 @@ package com.gfp.game.level;
 import java.util.Random;
 
 import com.gfp.game.Game;
+import com.gfp.game.entities.Zombie;
 import com.gfp.game.level.Tiles.Tile;
 
 public class generateLevel extends Level
 {
-
 	private int waterAmount = 0;
+	private Seed seed = new Seed();
+	Random rm = seed.getSeed(1);
+	private Zombie zombie;
 
 	public generateLevel(String imagePath)
 	{
 		super(imagePath);
 		addWall();
-		//generateRivers(4, true, Tile.BUSHGRASS.getid());
-		generateRivers(4, true, Tile.WATER.getid());
+		// generateRivers(4, true, Tile.BUSHGRASS.getid());
+		generateRivers(4, true, Tile.LAVA.getid());
+		// generateRivers(20, false, Tile.LAVA.getid());
 		generateDessert();
+		generateBushes(20);
+		generateStones(20, 20);
+		addPortal();
+		
+		int zbieAmount = rm.nextInt(20);
+		for (int i = 0; i < zbieAmount; i++)
+		{
+			zombie = new Zombie(this, null, rm.nextInt(width*8), rm.nextInt(height*8));
+			this.addEntity(zombie);
+		}
 	}
 
 	public void addWall()
@@ -39,12 +53,13 @@ public class generateLevel extends Level
 
 	public void generateRivers(int maxWaterBodies, boolean allowLakes, byte tile)
 	{
+
 		int x;
 		int y;
 		int length;
 		int nextTile;
 		int spawnNumber = 4;
-		Random rm = new Random();
+
 		int waterBodiesNum = rm.nextInt(maxWaterBodies);
 
 		if (allowLakes == false)
@@ -101,28 +116,16 @@ public class generateLevel extends Level
 					}
 				}
 
-				if (x <= -1)
+				if (x < width && x > 0)
+				{
+					if (y < height && y > 0)
+					{
+						this.tiles[this.cordstoTile(x * 8, y * 8)] = tile;
+					}
+				} else
 				{
 					wall = true;
-					x++;
 				}
-				if (x >= width)
-				{
-					wall = true;
-					x--;
-				}
-				if (y <= -1)
-				{
-					wall = true;
-					y++;
-				}
-				if (y >= height)
-				{
-					wall = true;
-					y--;
-				}
-
-				this.tiles[this.cordstoTile(x * 8, y * 8)] = tile;
 
 			}
 		}
@@ -154,5 +157,76 @@ public class generateLevel extends Level
 				}
 			}
 		}
+	}
+
+	public void generateBushes(int maxBushes)
+	{
+		int amountOfBushes = rm.nextInt(maxBushes);
+		Game.debug(Game.DebugLevel.INFO, Integer.toString(amountOfBushes));
+
+		for (int i = 0; i < amountOfBushes; i++)
+		{
+			boolean tilePlaced = false;
+
+			int x = rm.nextInt(width);
+			int y = rm.nextInt(height);
+			if (this.checkSurroundingTiles(x * 8, y * 8, Tile.GRASS.getid(), Tile.BUSHGRASS.getid()) > -1
+					&& this.checkSurroundingTiles(x * 8, y * 8, Tile.STONE.getid(), Tile.BUSHGRASS.getid()) == -1
+					&& this.checkSurroundingTiles(x * 8, y * 8, Tile.BUSHGRASS.getid(), Tile.BUSHGRASS.getid()) == -1)
+			{
+				this.tiles[this.cordstoTile(x * 8, y * 8)] = Tile.BUSHGRASS.getid();
+				tilePlaced = true;
+			}
+			if (this.checkSurroundingTiles(x * 8, y * 8, Tile.SAND.getid(), Tile.BUSHGRASS.getid()) > -1
+					&& this.checkSurroundingTiles(x * 8, y * 8, Tile.STONE.getid(), Tile.BUSHGRASS.getid()) == -1)
+			{
+				this.tiles[this.cordstoTile(x * 8, y * 8)] = Tile.BUSHSAND.getid();
+				tilePlaced = true;
+			}
+
+		}
+	}
+
+	public void generateStones(int maxStones, int maxStonesInHedge)
+	{
+		int amountOfStones = rm.nextInt(maxStones);
+		mainloop: for (int i = 0; i < amountOfStones; i++)
+		{
+			int x = rm.nextInt(width);
+			int y = rm.nextInt(height);
+			int tiles = rm.nextInt(maxStonesInHedge);
+			headgeloop: for (int stones = 0; stones < maxStonesInHedge; stones++)
+			{
+				int nextStone = rm.nextInt(4);
+				if (nextStone == 0)
+				{
+					y--;
+				} else if (nextStone == 1)
+				{
+					x++;
+				} else if (nextStone == 2)
+				{
+					y++;
+				} else if (nextStone == 3)
+				{
+					x--;
+				}
+				if (x < width && x > 0)
+				{
+					if (y < height && y > 0)
+					{
+						this.tiles[this.cordstoTile(x * 8, y * 8)] = Tile.STONE.getid();
+					}
+				}
+			}
+		}
+
+	}
+
+	public void addPortal()
+	{
+		int x = rm.nextInt(width);
+		int y = rm.nextInt(height);
+		this.tiles[this.cordstoTile(x * 8, y * 8)] = Tile.GRASSPORTAL.getid();
 	}
 }

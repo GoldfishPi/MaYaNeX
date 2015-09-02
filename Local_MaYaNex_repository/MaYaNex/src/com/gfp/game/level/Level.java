@@ -2,12 +2,17 @@ package com.gfp.game.level;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import com.gfp.game.Game;
 import com.gfp.game.entities.Entity;
 import com.gfp.game.entities.PlayerMP;
 import com.gfp.game.gfx.Screen;
@@ -79,8 +84,7 @@ public class Level
 		}
 	}
 
-	@SuppressWarnings("unused")
-	private void saveLevelToFile()
+	public void saveLevelToFile()
 	{
 		try
 		{
@@ -88,6 +92,37 @@ public class Level
 			ImageIO.write(image, "png", new File(Level.class.getResource(this.imagePath).getFile()));
 
 		} catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	public void saveLevel(String username, Level level)
+	{
+		try
+		{
+			FileWriter fw = new FileWriter("Local_MaYaNex_repository/MaYaNex/saves/" + username + ".sav");
+			PrintWriter pw = new PrintWriter(fw);
+			for (int x = 0; x < level.width; x++)
+			{
+				for (int y = 0; y < level.height; y++)
+				{
+					pw.println(level.getTile(x, y).getid());
+				}
+			}
+		} catch (IOException e)
+		{
+			Game.debug(Game.DebugLevel.SEVERE, "We cant find your shit Your save file is missing of corupt");
+			e.printStackTrace();
+		}
+	}
+	
+	public void loadLevel(String username, Level level)
+	{
+		try
+		{
+			FileReader fr = new FileReader("Local_MaYaNex_repository/MaYaNex/saves/" + username + ".sav");
+		} catch (FileNotFoundException e)
 		{
 			e.printStackTrace();
 		}
@@ -117,10 +152,14 @@ public class Level
 		}
 
 	}
+	
+	public synchronized List<Entity>getEntity(){
+		return this.entities;
+	}
 
 	public void tick()
 	{
-		for (Entity e : entities)
+		for (Entity e : getEntity())
 		{
 			e.tick();
 		}
@@ -152,7 +191,7 @@ public class Level
 
 	public void renderEntities(Screen screen)
 	{
-		for (Entity e : entities)
+		for (Entity e : getEntity())
 		{
 			e.render(screen);
 		}
@@ -210,14 +249,14 @@ public class Level
 
 	public void addEntity(Entity entity)
 	{
-		this.entities.add(entity);
+		this.getEntity().add(entity);
 
 	}
 
 	public void removePlayerMP(String username)
 	{
 		int index = 0;
-		for (Entity e : entities)
+		for (Entity e : getEntity())
 		{
 			if (e instanceof PlayerMP && ((PlayerMP) e).getUsername().equals(username))
 			{
@@ -225,14 +264,14 @@ public class Level
 			}
 			index++;
 		}
-		this.entities.remove(index);
+		this.getEntity().remove(index);
 
 	}
 
 	private int getPlayerMPIndex(String username)
 	{
 		int index = 0;
-		for (Entity e : entities)
+		for (Entity e : getEntity())
 		{
 			if (e instanceof PlayerMP && ((PlayerMP) e).getUsername().equals(username))
 			{
@@ -244,11 +283,16 @@ public class Level
 
 	}
 
-	public void movePlayer(String username, int x, int y)
+	public void movePlayer(String username, int x, int y, int numSteps, boolean isMoving, int movingDir)
 	{
 		int index = getPlayerMPIndex(username);
-		this.entities.get(index).x = x;
-		this.entities.get(index).y = y;
+		PlayerMP player = (PlayerMP)this.getEntity().get(index);
+		player.x = x;
+		player.y = y;
+		player.setMoving(isMoving);
+		player.setNumSteps(numSteps);
+		player.setMovingDir(movingDir);
+		
 	}
 
 }

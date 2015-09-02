@@ -28,13 +28,10 @@ public abstract class Tile
 			Colours.get( 131, 151, 121, 527 ), 0xFF007a00 );
 	public static final Tile BUSHSAND = new BasicTile( 6, 0, 1,
 			Colours.get( 537, 151, 121, 527 ), 0xFF637a00 );
-	public static final Tile CHEST = new InteractionTile( 7, new int[][]
-	{
-	{ 0, 6 },
-	{ 1, 6 } }, Colours.get( 123, 346, 000, 142 ), 0xFFc5c500, 00 );
 	public static final Tile LAVA = new AnimatedTile( 8, new int[][]{ {4, 5}, { 5, 5}, {6, 5},{7,5},{8, 5},{7,5},{6,5}, {5,5} }, Colours.get(-1, 400, 500, -1), 0xFFff1500, 600);
 	public static final Tile OPENDOOR = new BasicTile(9, 2, 1, Colours.get(131, 111, 333, -1),0xFF000000 );
 	public static final Tile CLOSEDOOR = new BasicSolidTile(10, 1, 1, Colours.get(131, 111, 333, -1),0xFFb33f00 );
+	public static final Tile GRASSPORTAL = new BasicTile(11 ,3, 1, Colours.get(131, 500, 414, 313), 0xFF000000);
 	protected byte id;
 	protected boolean solid;
 	protected boolean emitter;

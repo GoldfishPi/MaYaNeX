@@ -7,7 +7,7 @@ public class Seed
 
 	public Random rm = new Random();
 
-	public Random getSeed()
+	public Random getSeed(int num)
 	{
 		rm = new Random();
 		return rm;

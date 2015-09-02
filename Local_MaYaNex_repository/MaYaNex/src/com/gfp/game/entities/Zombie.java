@@ -1,12 +1,14 @@
 package com.gfp.game.entities;
 
+import java.util.Random;
+
 import com.gfp.game.gfx.Colours;
 import com.gfp.game.gfx.Screen;
 import com.gfp.game.level.Level;
 
 public class Zombie extends Mob
 {
-	private int colour = Colours.get(-1, 000, 400, 121);
+	private int colour = Colours.get(-1, 000, 125, 121);
 	public boolean isBerry = false;
 	public boolean isSwimming = false;
 	private boolean isLava = false;
@@ -14,15 +16,22 @@ public class Zombie extends Mob
 	private int tickCount = 0;
 	public int charic = 25;
 	private boolean slowness = true;
+	private int alreadyMove = 3;
+	private int range = 75;
+	private int health = 0;
+
+	public Random rm = new Random();
 
 	public Zombie(Level level, String name, int x, int y)
 	{
-		super(level, name, x, y, 1);
+		super(level, name, x, y, 1, 3);
+		
 	}
 
 	@Override
 	public boolean hasCollided(int xa, int ya)
 	{
+		
 		// boolean gm = false;
 		int xMin = 0;
 		int xMax = 7;
@@ -62,54 +71,80 @@ public class Zombie extends Mob
 	}
 
 	@Override
-	public boolean hasPainfull(int xa, int ya)
-	{
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
 	public void tick()
 	{
 		int xa = 0;
 		int ya = 0;
 		int index = 0;
-		for (Entity e : level.entities)
+		int randomMove = rm.nextInt(10);
+		int randomMoveTime = rm.nextInt(100);
+		for (Entity e : level.getEntity())
 		{
-			if (e instanceof PlayerMP)
+			if (e instanceof Player)
 			{
 				break;
 			}
 			index++;
 		}
-		if (!slowness)
+		
+		int playerX = level.entities.get(index).x;
+		int playerY = level.entities.get(index).y;
+		
+		
+		
+		
+		if (!slowness && playerX < x + range && playerX > x - range&& playerY > y - range && playerY < y + range)
 		{
-			if (level.entities.get(index).x > x)
+			
+			if (playerX > x  )
 			{
 				xa += 1;
 			}
-			if (level.entities.get(index).x < x)
+			if (playerX < x )
 			{
 				xa -= 1;
 			}
-			if (level.entities.get(index).y < y)
+			if (playerY < y )
 			{
 				ya -= 1;
 			}
-			if (level.entities.get(index).y > y)
+			if (playerY > y)
 			{
 				ya += 1;
 			}
+
 			if (xa != 0 || ya != 0)
 			{
 				move(xa, ya);
 			}
+
 			slowness = true;
-		}
-		else if(slowness){
+
+		} else if (slowness)
+		{
 			slowness = false;
 		}
+
+		if (level.getTile(this.x >> 3, this.y >> 3).getid() == 3)
+		{
+			isSwimming = true;
+		}
+		if (isSwimming && level.getTile(this.x >> 3, this.y >> 3).getid() != 3)
+		{
+			isSwimming = false;
+		}
+		
+		if (level.getTile(this.x >> 3, this.y >> 3).getid() == 8)
+		{
+			isLava = true;
+		}
+		if (isLava && level.getTile(this.x >> 3, this.y >> 3).getid() != 8)
+		{
+			isLava = false;
+		}
 		tickCount++;
+		alreadyMove ++;
+		
 
 	}
 
@@ -211,24 +246,7 @@ public class Zombie extends Mob
 			timeInLava = 0;
 		}
 
-		// health
-		for (int i = 0; i < health; i++)
-		{
-			screen.render(screen.xOffset + xHealth, screen.yOffset + yHealth, 1 + 27 * 32, Colours.get(-1, 500, 500, 000), 0x00, 1);
-			screen.render(screen.xOffset + xHealth - 7, screen.yOffset + yHealth, 1 + 27 * 32, Colours.get(-1, 500, 500, 000), 0x01, 1);
 
-			xHealth += 10;
-		}
-
-		for (int i = 0; i < initHealth; i++)
-		{
-			// screen.xOffset + xOutline, screen.yOffset + yOutline, 1 + 27 * 32
-			// old position
-			screen.render(screen.xOffset + xOutline, screen.yOffset + yOutline, 1 + 27 * 32, Colours.get(-1, -1, 500, 000), 0x00, 1);
-			screen.render(screen.xOffset + xOutline - 7, screen.yOffset + yOutline, 1 + 27 * 32, Colours.get(-1, -1, 500, 000), 0x01, 1);
-
-			xOutline += 10;
-		}
 		// player model
 		screen.render(xOffset + (modifier * flipTop), yOffset, xTile + yTile * 32, colour, flipTop, scale); // upper
 																											// body

@@ -20,20 +20,23 @@ public class Player extends Mob
 	private int tickCount;
 	public int charic = 28;
 	private String username;
-	private int health = 3;
+	public int health = 3;
 	protected boolean isLava = false;
 	private int timeInLava = 0;
 	protected boolean isBerry = false;
+	protected boolean isPortal = false;
 	
 	public Bullet bullet;
 	private boolean placeTile = false;
+	
 
 	public Player(Level level, int x, int y, InputHandler input, String username)
 	{
-		super(level, "Player", x, y, 1);
+	
+		super(level, "Player", x, y, 1, 1);
 		this.input = input;
 		this.username = username;
-		// this.health = health;
+		this.health = health;
 	}
 
 	public void tick()
@@ -60,14 +63,16 @@ public class Player extends Mob
 				xa += 1;
 
 			}
-			if (input.J.isPressed())
+			if (input.J.isPressed() /*&& isPortal*/)
 			{
-				Game.changeLevel("/levels/smallLevel.png", 0, 0);
+				Game.changeLevel("/levels/genLevel.png", 100, 100);
 			}
 
 			if (input.K.isPressed())
 			{
 				placeTile = true;
+				level.saveLevel(username, level);;
+				
 			}
 			if (placeTile == true && !input.K.isPressed())
 			{
@@ -92,8 +97,8 @@ public class Player extends Mob
 		{
 			move(xa, ya);
 			isMoving = true;
-			Packet02Move packet = new Packet02Move(this.getUsername(), this.x, this.y);
-			packet.writeData(Game.game.socketClient);
+			/*Packet02Move packet = new Packet02Move(this.getUsername(), this.x, this.y, this.numSteps, isMoving, this.movingDir);
+			packet.writeData(Game.game.socketClient);*/
 		} else
 		{
 			isMoving = false;
@@ -125,10 +130,14 @@ public class Player extends Mob
 		{
 			isBerry = false;
 		}
-
-		if (hasPainfull(xa, ya))
+		if (level.getTile(this.x >> 3, this.y >> 3).getid() == 11)
 		{
-			health--;
+			isPortal = true;
+		}
+
+		if (isPortal && level.getTile(this.x >> 3, this.y >> 3).getid() != 11)
+		{
+			isPortal = false;
 		}
 
 		if (isLava)
@@ -149,13 +158,6 @@ public class Player extends Mob
 		int flipTop = (numSteps >> walkingSpeed) & 1;
 		int flipBottom = (numSteps >> walkingSpeed) & 1;
 
-		int xHealthHud = 5;
-		int yHealthHud = 5;
-		int xHealth = xHealthHud;
-		int yHealth = yHealthHud;
-		final int initHealth = 3;
-		int xOutline = xHealthHud;
-		int yOutline = yHealthHud;
 
 		if (movingDir == 1)
 		{
@@ -220,9 +222,10 @@ public class Player extends Mob
 			{
 				lavaColour = Colours.get(-1, 500, 300, -1);
 				timeInLava += 1;
+				Game.debug(Game.DebugLevel.INFO, Integer.toString(health));
 			}
 
-			if (timeInLava >= 50)
+			if (timeInLava >= 25)
 			{
 				health--;
 				timeInLava = 0;
@@ -237,24 +240,6 @@ public class Player extends Mob
 			timeInLava = 0;
 		}
 
-		// health
-		for (int i = 0; i < health; i++)
-		{
-			screen.render(screen.xOffset + xHealth, screen.yOffset + yHealth, 1 + 27 * 32, Colours.get(-1, 500, 500, 000), 0x00, 1);
-			screen.render(screen.xOffset + xHealth - 7, screen.yOffset + yHealth, 1 + 27 * 32, Colours.get(-1, 500, 500, 000), 0x01, 1);
-
-			xHealth += 10;
-		}
-
-		for (int i = 0; i < initHealth; i++)
-		{
-			// screen.xOffset + xOutline, screen.yOffset + yOutline, 1 + 27 * 32
-			// old position
-			screen.render(screen.xOffset + xOutline, screen.yOffset + yOutline, 1 + 27 * 32, Colours.get(-1, -1, 500, 000), 0x00, 1);
-			screen.render(screen.xOffset + xOutline - 7, screen.yOffset + yOutline, 1 + 27 * 32, Colours.get(-1, -1, 500, 000), 0x01, 1);
-
-			xOutline += 10;
-		}
 		// player model
 		screen.render(xOffset + (modifier * flipTop), yOffset, xTile + yTile * 32, colour, flipTop, scale); // upper
 																											// body
@@ -278,16 +263,10 @@ public class Player extends Mob
 																																						// 2
 		}
 
-		if (isBerry && health != initHealth && !isLava && !isSwimming)
-		{
-			health++;
-		}
-
 		if (username != null)
 		{
 			Font.render(username, screen, xOffset - ((username.length() - 1) / 2 * 8), yOffset - 10, Colours.get(-1, -1, -1, 555), 1);
 		}
-
 		if (placeTile)
 		{
 			placeTile = false;
@@ -357,49 +336,9 @@ public class Player extends Mob
 
 	}
 
-	@Override
-	public boolean hasPainfull(int xa, int ya)
-	{
-		int xMin = 0;
-		int xMax = 7;
-		int yMin = 3;
-		int yMax = 7;
-
-		for (int x = xMin; x < xMax; x++)
-		{
-			if (isPainfullTile(xa, ya, x, yMin))
-			{
-
-			}
-		}
-		for (int x = xMin; x < xMax; x++)
-		{
-			if (isPainfullTile(xa, ya, x, yMax))
-			{
-				return true;
-			}
-		}
-		for (int y = yMin; y < yMax; y++)
-		{
-			if (isPainfullTile(xa, ya, xMin, y))
-			{
-				return true;
-			}
-		}
-		for (int y = yMin; y < yMax; y++)
-		{
-			if (isPainfullTile(xa, ya, xMax, y))
-			{
-				return true;
-			}
-		}
-
-		return false;
-
-	}
-
 	public String getUsername()
 	{
 		return this.username;
 	}
+	
 }
