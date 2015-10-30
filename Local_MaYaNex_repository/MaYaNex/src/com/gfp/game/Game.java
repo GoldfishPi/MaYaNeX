@@ -25,7 +25,7 @@ import com.gfp.game.net.packets.Packet00Login;
 
 public class Game extends Canvas implements Runnable
 {
-	//
+	//hello
 
 	private static final long serialVersionUID = 1L;
 
