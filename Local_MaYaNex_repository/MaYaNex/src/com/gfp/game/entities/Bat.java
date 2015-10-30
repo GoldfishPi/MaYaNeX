@@ -76,7 +76,7 @@ public class Bat extends Mob
 	{
 		int xa = 0;
 		int ya = 0;
-		xa +=1;
+		xa -=1;
 		
 		move(xa, ya);
 		tickCount ++;
