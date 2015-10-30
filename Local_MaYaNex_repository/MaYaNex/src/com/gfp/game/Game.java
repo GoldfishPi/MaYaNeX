@@ -85,7 +85,7 @@ public class Game extends Canvas implements Runnable
 
 		screen = new Screen(WIDTH, HEIGHT, new SpriteSheet("/SpriteSheet.png"));
 		input = new InputHandler(this);
-		level = new generateLevel("/levels/GenLevel.png");
+		level = new generateLevel("/levels/genLevel.png");
 		/* level = new Level("/levels/Level.png"); */
 
 		/*

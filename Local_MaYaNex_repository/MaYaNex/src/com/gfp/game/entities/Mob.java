@@ -4,8 +4,7 @@ import com.gfp.game.Game;
 import com.gfp.game.level.Level;
 import com.gfp.game.level.Tiles.Tile;
 
-public abstract class Mob extends Entity
-{
+public abstract class Mob extends Entity {
 
 	protected String name;
 	protected int speed;
@@ -14,41 +13,40 @@ public abstract class Mob extends Entity
 	protected int movingDir = 1;
 	protected int scale = 1;
 
-	public Mob( Level level, String name, int x, int y, int speed, int health )
-	{
-		super( level );
+	public Mob(Level level, String name, int x, int y, int speed, int health) {
+		super(level);
 		this.name = name;
 		this.x = x;
 		this.y = y;
 		this.speed = speed;
 	}
 
-	public void move( int xa, int ya )
-	{
-		if( xa != 0 && ya != 0 )
-		{
-			move( xa, 0 );
-			move( 0, ya );
+	public int updateHealth(int health, int damage) {
+		healthMod += damage;
+		health += healthMod;
+		healthMod = 0;
+		return health;
+	}
+
+	public void move(int xa, int ya) {
+		if (xa != 0 && ya != 0) {
+			move(xa, 0);
+			move(0, ya);
 			numSteps -= 1;
 			return;
 		}
 		numSteps += 1;
-		if( !hasCollided( xa, ya ) )
-		{
-			if( ya < 0 )
-			{
+		if (!hasCollided(xa, ya)) {
+			if (ya < 0) {
 				movingDir = 0;
 			}
-			if( ya > 0 )
-			{
+			if (ya > 0) {
 				movingDir = 1;
 			}
-			if( xa < 0 )
-			{
+			if (xa < 0) {
 				movingDir = 2;
 			}
-			if( xa > 0 )
-			{
+			if (xa > 0) {
 				movingDir = 3;
 			}
 			x += xa * speed;
@@ -56,67 +54,58 @@ public abstract class Mob extends Entity
 		}
 	}
 
-	public abstract boolean hasCollided( int xa, int ya );
+	public abstract boolean hasCollided(int xa, int ya);
 
-	protected boolean isSolidTile( int xa, int ya, int x, int y )
-	{
+	protected boolean isSolidTile(int xa, int ya, int x, int y) {
 
-		if( level == null )
-		{
+		if (level == null) {
 			return false;
 		}
-		Tile lastTile = Game.level.getTile( (this.x + x) >> 3, (this.y + y) >> 3 );
-		Tile newTile = Game.level.getTile( (this.x + x + xa) >> 3,
-				(this.y + y + ya) >> 3 );
+		Tile lastTile = Game.level
+				.getTile((this.x + x) >> 3, (this.y + y) >> 3);
+		Tile newTile = Game.level.getTile((this.x + x + xa) >> 3,
+				(this.y + y + ya) >> 3);
 
-		if( !lastTile.equals( newTile ) && newTile.isSolid() )
-		{
+		if (!lastTile.equals(newTile) && newTile.isSolid()) {
 			return true;
 
 		}
 		return false;
 	}
 
-	public String getName()
-	{
+	public String getName() {
 		return name;
 	}
-	
-	protected int getHealth(){
+
+	protected int getHealth() {
 		return 1;
 	}
-	
-	public void changeLevel(Level level){
+
+	public void changeLevel(Level level) {
 		this.level = level;
 	}
 
-	public int getNumSteps()
-	{
+	public int getNumSteps() {
 		return numSteps;
 	}
 
-	public void setNumSteps(int numSteps)
-	{
+	public void setNumSteps(int numSteps) {
 		this.numSteps = numSteps;
 	}
 
-	public boolean isMoving()
-	{
+	public boolean isMoving() {
 		return isMoving;
 	}
 
-	public void setMoving(boolean isMoving)
-	{
+	public void setMoving(boolean isMoving) {
 		this.isMoving = isMoving;
 	}
 
-	public int getMovingDir()
-	{
+	public int getMovingDir() {
 		return movingDir;
 	}
 
-	public void setMovingDir(int movingDir)
-	{
+	public void setMovingDir(int movingDir) {
 		this.movingDir = movingDir;
 	}
 }

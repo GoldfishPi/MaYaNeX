@@ -16,7 +16,7 @@ public class Zombie extends Mob
 	private int tickCount = 0;
 	public int charic = 25;
 	private boolean slowness = true;
-	private int alreadyMove = 3;
+	
 	private int range = 75;
 	private int health = 0;
 
@@ -76,9 +76,13 @@ public class Zombie extends Mob
 		int xa = 0;
 		int ya = 0;
 		int index = 0;
-		int randomMove = rm.nextInt(10);
-		int randomMoveTime = rm.nextInt(100);
-		for (Entity e : level.getEntity())
+		
+		int attackDistance = 10;
+		
+		@SuppressWarnings("unused")
+		Player[] players;
+		
+		for  (Entity e : level.getEntity())
 		{
 			if (e instanceof Player)
 			{
@@ -87,14 +91,17 @@ public class Zombie extends Mob
 			index++;
 		}
 		
+		
+		
 		int playerX = level.entities.get(index).x;
 		int playerY = level.entities.get(index).y;
 		
 		
 		
 		
-		if (!slowness && playerX < x + range && playerX > x - range&& playerY > y - range && playerY < y + range)
+		if (!slowness && playerX < x + range && playerX > x - range ||!slowness && playerY > y - range && playerY < y + range)
 		{
+			
 			
 			if (playerX > x  )
 			{
@@ -120,7 +127,11 @@ public class Zombie extends Mob
 
 			slowness = true;
 
-		} else if (slowness)
+		} 
+		
+		
+		
+		else if (slowness)
 		{
 			slowness = false;
 		}
@@ -143,8 +154,29 @@ public class Zombie extends Mob
 			isLava = false;
 		}
 		tickCount++;
-		alreadyMove ++;
-		
+		 
+		if(playerX <= x + attackDistance && playerX >= x - attackDistance && playerY <= y + attackDistance && playerX >= y -attackDistance){
+			int subHealth = 0;
+			
+			if (tickCount % 60 < 15)
+			{
+				
+			} else if (15 <= tickCount % 60 && tickCount % 60 < 30)
+			{
+			
+			} else if (30 <= tickCount % 60 && tickCount % 60 == 45)
+			{
+				subHealth --;
+			} else
+			{
+				
+				
+			}
+			level.entities.get(index).healthMod += subHealth;
+			
+			
+			
+		}
 
 	}
 
@@ -158,14 +190,8 @@ public class Zombie extends Mob
 		int flipTop = (numSteps >> walkingSpeed) & 1;
 		int flipBottom = (numSteps >> walkingSpeed) & 1;
 
-		int xHealthHud = 5;
-		int yHealthHud = 5;
-		int xHealth = xHealthHud;
-		int yHealth = yHealthHud;
 		final int initHealth = 3;
-		int xOutline = xHealthHud;
-		int yOutline = yHealthHud;
-
+		
 		if (movingDir == 1)
 		{
 			xTile += 2;
@@ -174,11 +200,6 @@ public class Zombie extends Mob
 			xTile += 4 + ((numSteps >> walkingSpeed) & 1) * 2;
 			flipTop = (movingDir - 1) % 2;
 			flipBottom = (movingDir - 1) % 2;
-			/*
-			 * if (isMoving == true) { xTile += 4 + ((numSteps >> walkingSpeed)
-			 * & 1) * 2; flipTop = (movingDir - 1) % 2; flipBottom = (movingDir
-			 * - 1) % 2; } else { xTile += 4; }
-			 */
 		}
 
 		int modifier = 8 * scale;

@@ -29,6 +29,8 @@ public class Player extends Mob
 	public Bullet bullet;
 	private boolean placeTile = false;
 	
+	boolean shoot = false;
+	
 
 	public Player(Level level, int x, int y, InputHandler input, String username)
 	{
@@ -70,9 +72,17 @@ public class Player extends Mob
 
 			if (input.K.isPressed())
 			{
-				placeTile = true;
-				level.saveLevel(username, level);;
+				shoot = true;
+				//screen.render(x,y, colour, 0, scale,0); // upper
 				
+				/*placeTile = true;
+				level.saveLevel(username, level);;*/
+				
+				System.out.print("shoot");
+				
+			}
+			if (!input.K.isPressed()){
+				shoot = false;
 			}
 			if (placeTile == true && !input.K.isPressed())
 			{
@@ -91,6 +101,9 @@ public class Player extends Mob
 					isSwimming = false;
 				}
 			}
+			
+			
+			
 		}
 
 		if (xa != 0 || ya != 0)
@@ -145,6 +158,7 @@ public class Player extends Mob
 			// health--;
 		}
 
+		health = updateHealth(health, 0);
 		tickCount++;
 
 	}
@@ -227,7 +241,7 @@ public class Player extends Mob
 
 			if (timeInLava >= 25)
 			{
-				health--;
+				health = updateHealth(health, -1);
 				timeInLava = 0;
 			}
 
@@ -261,6 +275,10 @@ public class Player extends Mob
 																																						// body
 																																						// part
 																																						// 2
+		}
+		
+		if(shoot){
+			screen.render(100, 100, 00, colour, flipBottom, scale);
 		}
 
 		if (username != null)
@@ -329,6 +347,8 @@ public class Player extends Mob
 		}
 
 		return false;
+		
+		
 	}
 
 	public void toggleDoor()

@@ -3,6 +3,7 @@ package com.gfp.game.level;
 import java.util.Random;
 
 import com.gfp.game.Game;
+import com.gfp.game.entities.Bat;
 import com.gfp.game.entities.Zombie;
 import com.gfp.game.level.Tiles.Tile;
 
@@ -12,13 +13,15 @@ public class generateLevel extends Level
 	private Seed seed = new Seed();
 	Random rm = seed.getSeed(1);
 	private Zombie zombie;
+	private int index;
+	private Bat bat;
 
 	public generateLevel(String imagePath)
 	{
 		super(imagePath);
 		addWall();
 		// generateRivers(4, true, Tile.BUSHGRASS.getid());
-		generateRivers(4, true, Tile.LAVA.getid());
+		generateRivers(4, true, Tile.WATER.getid());
 		// generateRivers(20, false, Tile.LAVA.getid());
 		generateDessert();
 		generateBushes(20);
@@ -26,10 +29,15 @@ public class generateLevel extends Level
 		addPortal();
 		
 		int zbieAmount = rm.nextInt(20);
+		
 		for (int i = 0; i < zbieAmount; i++)
 		{
-			zombie = new Zombie(this, null, rm.nextInt(width*8), rm.nextInt(height*8));
-			this.addEntity(zombie);
+			int x = rm.nextInt(width*8);
+			int y = rm.nextInt(height*8);
+			bat = new Bat(this, null, 100, 100);
+			
+			zombie = new Zombie(this, null, x, y);
+			this.addEntity(bat);
 		}
 	}
 
