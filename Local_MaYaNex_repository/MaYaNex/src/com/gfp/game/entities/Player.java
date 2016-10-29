@@ -21,12 +21,12 @@ public class Player extends Mob
 	public int charic = 28;
 	private String username;
 	public int health = 3;
+	public static int MAXHEALTH = 3;
 	protected boolean isLava = false;
 	private int timeInLava = 0;
 	protected boolean isBerry = false;
 	protected boolean isPortal = false;
 	
-	public Bullet bullet;
 	private boolean placeTile = false;
 	
 	boolean shoot = false;
@@ -67,20 +67,11 @@ public class Player extends Mob
 			}
 			if (input.J.isPressed() /*&& isPortal*/)
 			{
-				Game.changeLevel("/levels/genLevel.png", 100, 100);
+				if(isPortal){
+					Game.changeLevel("/levels/genLevel.png", 100, 100);
+				}
 			}
 
-			if (input.K.isPressed())
-			{
-				shoot = true;
-				//screen.render(x,y, colour, 0, scale,0); // upper
-				
-				/*placeTile = true;
-				level.saveLevel(username, level);;*/
-				
-				System.out.print("shoot");
-				
-			}
 			if (!input.K.isPressed()){
 				shoot = false;
 			}
@@ -194,6 +185,9 @@ public class Player extends Mob
 		// Swimming code
 		if (isSwimming)
 		{
+			if(health < MAXHEALTH){
+				health ++;
+			}
 			int waterColour = 0;
 			yOffset += 6;
 			if (tickCount % 60 < 15)

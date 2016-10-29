@@ -19,8 +19,14 @@ public class Zombie extends Mob
 	
 	private int range = 75;
 	private int health = 0;
+	
+	private int playerX;
+	private int playerY;
+	
 
 	public Random rm = new Random();
+	
+	private int intelagence = rm.nextInt(50)+50;
 
 	public Zombie(Level level, String name, int x, int y)
 	{
@@ -79,24 +85,27 @@ public class Zombie extends Mob
 		
 		int attackDistance = 10;
 		
+		Random rand = new Random();
+		
+		
+		int updatePlayerInfo = rand.nextInt(intelagence);
+		
 		@SuppressWarnings("unused")
 		Player[] players;
 		
-		for  (Entity e : level.getEntity())
-		{
-			if (e instanceof Player)
+		if(updatePlayerInfo ==1){
+			for  (Entity e : level.getEntity())
 			{
-				break;
+				if (e instanceof Player)
+				{
+					break;
+				}
+				index++;
 			}
-			index++;
+			
+			playerX = level.entities.get(index).x;
+			playerY = level.entities.get(index).y;
 		}
-		
-		
-		
-		int playerX = level.entities.get(index).x;
-		int playerY = level.entities.get(index).y;
-		
-		
 		
 		
 		if (!slowness && playerX < x + range && playerX > x - range ||!slowness && playerY > y - range && playerY < y + range)

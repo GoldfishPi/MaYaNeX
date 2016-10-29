@@ -28,16 +28,16 @@ public class generateLevel extends Level
 		generateStones(20, 20);
 		addPortal();
 		
-		int zbieAmount = rm.nextInt(20);
+		int zbieAmount = rm.nextInt(500);
 		
 		for (int i = 0; i < zbieAmount; i++)
 		{
 			int x = rm.nextInt(width*8);
 			int y = rm.nextInt(height*8);
-			bat = new Bat(this, null, 100, 100);
+			bat = new Bat(this, null, x, y);
 			
 			zombie = new Zombie(this, null, x, y);
-			this.addEntity(bat);
+			this.addEntity(zombie);
 		}
 	}
 

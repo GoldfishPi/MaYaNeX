@@ -1,6 +1,7 @@
 package com.gfp.game.entities;
 
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import com.gfp.game.gfx.Colours;
 import com.gfp.game.gfx.Screen;
@@ -22,6 +23,9 @@ public class Bat extends Mob
 	private int charicPose=0;
 	private int[] poses={0,2,4};
 	public Random rm = new Random();
+	
+	private int playerX;
+	private int playerY;
 
 	public Bat(Level level, String name, int x, int y)
 	{
@@ -76,7 +80,40 @@ public class Bat extends Mob
 	{
 		int xa = 0;
 		int ya = 0;
-		xa -=1;
+		int index = 0;
+		Random rand = new Random();
+		
+	
+		int move = rand.nextInt(50);
+		
+		if (move ==1){
+			for  (Entity e : level.getEntity())
+			{
+				if (e instanceof Player)
+				{
+					break;
+				}
+				index++;
+			}
+			playerX = level.entities.get(index).x; 
+			playerY = level.entities.get(index).y;
+		}
+			
+		if(x != playerX || y != playerY){
+			if(playerX > x){
+				xa ++;
+			}else{
+				xa--;
+			}
+			if(playerY> y){
+				ya ++;
+			}else{
+				ya--;
+			}
+		}
+		
+		
+		
 		
 		move(xa, ya);
 		tickCount ++;
