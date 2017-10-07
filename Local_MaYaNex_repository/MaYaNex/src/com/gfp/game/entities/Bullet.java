@@ -1,5 +1,6 @@
 package com.gfp.game.entities;
 
+import com.gfp.game.Game;
 import com.gfp.game.InputHandler;
 import com.gfp.game.gfx.Colours;
 import com.gfp.game.gfx.Screen;
@@ -7,12 +8,13 @@ import com.gfp.game.level.Level;
 
 public class Bullet extends Mob
 {
-	InputHandler input;
+	
 
-	public Bullet(Level level, String name, int x, int y, int speed, InputHandler input)
+	public Bullet(Level level, String name, int x, int y, int speed, int movingDir)
 	{
+		
 		super(level, name, x, y, speed, -1);
-		this.input = input;
+		this.movingDir = movingDir;
 	}
 
 	@Override
@@ -61,24 +63,34 @@ public class Bullet extends Mob
 	{
 		int xa = 0;
 		int ya = 0;
-
-		if (input.K.Pressed)
-		{
-			xa++;
+		
+		if(movingDir == 0){
+			ya = -1;
 		}
+		else if(movingDir == 1){
+			ya = 1;
+		}
+		else if(movingDir == 2){
+			xa = -1;
+		}
+		else if(movingDir == 3){
+			xa = 1;
+		}
+		
+		
+		if(hasCollided( xa, ya )){
+			level.entities.remove( this );
+		}
+		
 		move(xa, ya);
 		isMoving = true;
-		/*
-		 * if( xa != 0 || ya != 0 ) { move( xa, ya ); isMoving = true; } else {
-		 * isMoving = false; }
-		 */
 
 	}
 
 	@Override
 	public void render(Screen screen)
 	{
-		screen.render(x, y, 3 + 27 * 32, Colours.get(555, 555, 555, 555), 0x00, 1);
+		screen.render(x, y, 3 + 27 * 32, Colours.get(-1, -1, -1, 555), 0x00, 1);
 
 	}
 
