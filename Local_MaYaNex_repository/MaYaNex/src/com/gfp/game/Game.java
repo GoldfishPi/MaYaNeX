@@ -85,15 +85,15 @@ public class Game extends Canvas implements Runnable
 
 		screen = new Screen(WIDTH, HEIGHT, new SpriteSheet("/SpriteSheet.png"));
 		input = new InputHandler(this);
-		level = new generateLevel("/levels/genLevel.png");
-		/* level = new Level("/levels/Level.png"); */
+		//level = new generateLevel("/levels/genLevel.png");
+		level = new Level("/levels/Level.png"); 
 
 		/*
 		 * player = new PlayerMP(level, 100, 100, input,
 		 * JOptionPane.showInputDialog(this, "Please enter a username"), null,
 		 * -1);
 		 */
-		player = new Player(level, 100, 100, input, JOptionPane.showInputDialog(this, "Please enter a username"));
+		player = new Player(level, 100, 100, input," " );
 		gui = new Gui(level, screen, player);
 		level.addEntity(player);
 		level.addEntity(gui);
@@ -291,12 +291,6 @@ public class Game extends Canvas implements Runnable
 		level.addEntity(player);
 		player.changeLevel(level);
 		level.addEntity(gui);
-	}
-
-	public static void summonBullet(int x, int y)
-	{
-		Bullet bullet = new Bullet(level, "hi", x, y, 3, input);
-		level.addEntity(bullet);
 	}
 
 }
